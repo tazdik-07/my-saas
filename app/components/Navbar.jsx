@@ -5,7 +5,7 @@ import { Bars3Icon, XMarkIcon, HeartIcon } from "@heroicons/react/24/outline"
 const navigation = [
   { name: "Home", href: "#" },
   { name: "Services", href: "#features" },
-  { name: "Doctors", href: "#doctors" },
+  { name: "For Doctors", href: "#doctors" },
   { name: "About", href: "#about" },
   { name: "Contact", href: "#contact" },
 ]
@@ -46,12 +46,12 @@ export default function Navbar() {
         <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-4 text-center justify-center items-center">
           
           <a
-            href="#"
+            href="/auth/signin"
             className="text-sm font-medium leading-6 text-gray-300 hover:text-white transition-colors duration-200 text-center"
           >
             Log In
           </a>
-          <a href="#" className="btn-primary rounded-md px-4 py-2 text-sm font-semibold text-white shadow-sm">
+          <a href="/auth/signup" className="btn-primary rounded-md px-4 py-2 text-sm font-semibold text-white shadow-sm">
             Sign Up
           </a>
         </div>
@@ -92,13 +92,13 @@ export default function Navbar() {
                 </div>
                 <div className="py-6 space-y-4">
                   <a
-                    href="#"
+                    href="/auth/signin"
                     className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-medium leading-7 text-gray-300 hover:bg-gray-800"
                   >
                     Log in
                   </a>
                   <a
-                    href="#"
+                    href="/auth/signup"
                     className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-medium leading-7 text-gray-300 hover:bg-gray-800"
                   >
                     Sign up

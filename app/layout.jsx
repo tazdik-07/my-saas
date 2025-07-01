@@ -1,5 +1,6 @@
 import { Inter, Poppins } from "next/font/google"
 import "./globals.css"
+import AuthSessionProvider from "./components/AuthSessionProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -22,7 +23,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`scroll-smooth bg-neutral-900 text-white ${inter.variable} ${poppins.variable}`}>
-      <body className="font-sans antialiased">{children}</body>
+      <body className="font-sans antialiased">
+        <AuthSessionProvider>{children}</AuthSessionProvider>
+      </body>
     </html>
-  )
+  );
 }
