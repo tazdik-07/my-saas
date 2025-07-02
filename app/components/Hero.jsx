@@ -25,7 +25,7 @@ export default function Hero() {
 
         {/* Search Bar */}
         <div className="mt-12 mx-auto max-w-4xl animate-slide-up">
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-gray-700 glow">
+          <div className="bg-[#1e2741] backdrop-blur-sm rounded-2xl p-6 border border-gray-700 glow">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="relative">
                 <MagnifyingGlassIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
