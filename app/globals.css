@@ -1,5 +1,5 @@
 /* Then pull in Tailwind (keeps your current styles working) */
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 @import "tailwindcss";
 
 .font-sans {
@@ -14,15 +14,25 @@
 }
 
 .bg-blur {
-  background-color: gray;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
   background-clip: padding-box;
   backdrop-filter: blur(12px) saturate(100%) contrast(100%);
-  opacity: 0%;
 }
 
 .heading {
   font-family: var(--font-inter);
   font-weight: 900;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }
 
 
@@ -119,4 +129,32 @@
 .card-hover:hover {
   transform: translateY(-5px);
   box-shadow: 0 20px 40px rgba(0, 0, 0, .3);
+}
+
+.loader {
+  border: 8px solid rgba(255, 255, 255, 0.3); /* Light border for the circle */
+  border-top-color: #3e8bff; /* Blue color for the spinning part */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  -webkit-animation: spinner 1.5s linear infinite;
+  animation: spinner 1.5s linear infinite;
+}
+
+@-webkit-keyframes spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

@@ -1,23 +1,53 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
-export default function SignUp() {
+export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
 
+  const router = useRouter();
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      alert("Passwords do not match!");
-      return;
+
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setPopupMessage(data.message);
+        setIsSuccess(true);
+        setShowPopup(true);
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 2000);
+      } else {
+        setPopupMessage(data.message || "Login failed.");
+        setIsSuccess(false);
+        setShowPopup(true);
+      }
+    } catch (error) {
+      console.error("Login Error:", error);
+      setPopupMessage("An error occurred. Please try again.");
+      setIsSuccess(false);
+      setShowPopup(true);
+    } finally {
+      setIsLoading(false);
     }
-    // In a real application, you would send this data to your backend to create a new user
-    console.log("Sign Up Attempt:", { email, password });
-    alert("Sign up functionality is not implemented in this example. Check console for details.");
-    // You might want to redirect to the sign-in page after a successful sign-up
-    // window.location.href = "/auth/signin";
   };
 
   return (
@@ -82,23 +112,42 @@ export default function SignUp() {
               <button
                 type="submit"
                 className="btn-primary flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                disabled={isLoading}
               >
-                Sign up
+                {isLoading ? "Signing In..." : "Sign in"}
               </button>
             </div>
           </form>
 
           <p className="mt-5 text-center text-sm text-gray-400">
             New User?{" "}
-            <a
-              href="/auth/signin"
+            <Link
+              href="/auth/signup"
               className="font-semibold leading-6 gradient-text"
             >
               Sign Up
-            </a>
+            </Link>
           </p>
         </div>
       </div >
+      {isLoading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-indigo-500"></div>
+        </div>
+      )}
+      {showPopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className={`p-6 rounded-lg shadow-xl text-white text-center ${isSuccess ? "bg-green-600" : "bg-red-600"}`}>
+            <p className="text-lg font-semibold">{popupMessage}</p>
+            <button
+              onClick={() => setShowPopup(false)}
+              className="mt-4 px-4 py-2 bg-white text-gray-800 rounded-md hover:bg-gray-200"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div >
   );
 }

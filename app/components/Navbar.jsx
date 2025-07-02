@@ -1,26 +1,41 @@
 "use client"
 import { useState } from "react"
+import Link from "next/link"
 import { Bars3Icon, XMarkIcon, HeartIcon } from "@heroicons/react/24/outline"
+import { useRouter } from "next/navigation"
 
 const navigation = [
-  { name: "Home", href: "#" },
-  { name: "Services", href: "#features" },
-  { name: "For Doctors", href: "#doctors" },
-  { name: "About", href: "#about" },
-  { name: "Contact", href: "#contact" },
+  { name: "Home", href: "/" },
+  { name: "Services", href: "/#features" },
+  { name: "For Doctors", href: "/#doctors" },
+  { name: "About", href: "/#about" },
+  { name: "Contact", href: "/#contact" },
 ]
 
-export default function Navbar() {
+export default function Navbar({ isLoggedIn, firstName, lastName }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false)
+
+  const router = useRouter()
+
+  const handleLogout = async () => {
+    await fetch("/api/auth/logout", { method: "POST" })
+    window.location.href = "/";
+  }
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 bg-[#0B1220]/95 backdrop-blur-sm border-b border-gray-800">
-      <nav className="flex items-center p-5 lg:px-8 mx-auto flex-row justify-between" aria-label="Global">
+    <header className="fixed inset-x-0 top-0 z-50">
+      <nav
+        className="flex items-center p-5 lg:px-8 mx-auto flex-row justify-between bg-[#0B1220]/80 backdrop-blur-sm border-b border-gray-800"
+        aria-label="Global"
+      >
         <div className="flex lg:flex-1">
-          <a href="#" className="-m-1.5 p-1.5 flex items-center space-x-2">
+          <Link href="/" className="-m-1.5 p-1.5 flex items-center space-x-2">
             <HeartIcon className="h-8 w-8 text-[#3E8BFF]" />
-            <span className="font-heading font-bold text-xl text-white">HealthCare Pro</span>
-          </a>
+            <span className="font-heading font-bold text-xl text-white">
+              HealthCare Pro
+            </span>
+          </Link>
         </div>
         <div className="flex lg:hidden">
           <button
@@ -34,39 +49,79 @@ export default function Navbar() {
         </div>
         <div className="hidden flex-1 justify-center lg:flex lg:justify-start lg:gap-x-12">
           {navigation.map((item) => (
-            <a
+            <Link
               key={item.name}
               href={item.href}
               className="text-sm font-medium leading-6 text-gray-300 hover:text-[#3E8BFF] transition-colors duration-200"
             >
               {item.name}
-            </a>
+            </Link>
           ))}
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-4 text-center justify-center items-center">
-          
-          <a
-            href="/auth/signin"
-            className="text-sm font-medium leading-6 text-gray-300 hover:text-white transition-colors duration-200 text-center"
-          >
-            Log In
-          </a>
-          <a href="/auth/signup" className="btn-primary rounded-md px-4 py-2 text-sm font-semibold text-white shadow-sm">
-            Sign Up
-          </a>
+          {isLoggedIn ? (
+            <div className="relative">
+              <button
+                onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+                className="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-white text-lg font-semibold cursor-pointer"
+              >
+                {firstName?.charAt(0).toUpperCase()}{lastName?.charAt(0).toUpperCase()}
+              </button>
+              {profileMenuOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-[#0B1220] border border-gray-800 rounded-md shadow-lg py-1">
+                  <Link
+                    href="/profile"
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-800"
+                    onClick={() => setProfileMenuOpen(false)}
+                  >
+                    Profile
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-800"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <>
+              <Link
+                href="/auth/signin"
+                className="text-sm font-medium leading-6 text-gray-300 hover:text-white transition-colors duration-200 text-center"
+              >
+                Log In
+              </Link>
+              <Link
+                href="/auth/signup"
+                className="btn-primary rounded-md px-4 py-2 text-sm font-semibold text-white shadow-sm"
+              >
+                Sign Up
+              </Link>
+            </>
+          )}
         </div>
       </nav>
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
         <div className="lg:hidden">
-          <div className="fixed inset-0 z-50" onClick={() => setMobileMenuOpen(false)} />
+          <div
+            className="fixed inset-0 z-50"
+            onClick={() => setMobileMenuOpen(false)}
+          />
           <div className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-[#0B1220] px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-800">
             <div className="flex items-center justify-between">
-              <a href="#" className="-m-1.5 p-1.5 flex items-center space-x-2">
+              <Link
+                href="/"
+                className="-m-1.5 p-1.5 flex items-center space-x-2"
+              >
                 <HeartIcon className="h-8 w-8 text-[#3E8BFF]" />
-                <span className="font-heading font-bold text-xl text-white">HealthCare Pro</span>
-              </a>
+                <span className="font-heading font-bold text-xl text-white">
+                  HealthCare Pro
+                </span>
+              </Link>
               <button
                 type="button"
                 className="-m-2.5 rounded-md p-2.5 text-gray-300"
@@ -80,35 +135,43 @@ export default function Navbar() {
               <div className="-my-6 divide-y divide-gray-800">
                 <div className="space-y-2 py-6">
                   {navigation.map((item) => (
-                    <a
+                    <Link
                       key={item.name}
                       href={item.href}
                       className="-mx-3 block rounded-lg px-3 py-2 text-base font-medium leading-7 text-gray-300 hover:bg-gray-800 hover:text-[#3E8BFF]"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       {item.name}
-                    </a>
+                    </Link>
                   ))}
                 </div>
                 <div className="py-6 space-y-4">
-                  <a
-                    href="/auth/signin"
-                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-medium leading-7 text-gray-300 hover:bg-gray-800"
-                  >
-                    Log in
-                  </a>
-                  <a
-                    href="/auth/signup"
-                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-medium leading-7 text-gray-300 hover:bg-gray-800"
-                  >
-                    Sign up
-                  </a>
-                  <a
-                    href="#"
-                    className="btn-primary block rounded-md px-3 py-2.5 text-center text-base font-semibold text-white shadow-sm"
-                  >
-                    Book Appointment
-                  </a>
+                  {isLoggedIn ? (
+                    <div className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-medium leading-7 text-gray-300">
+                      <div className="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-white text-lg font-semibold mx-auto">
+                        {firstName?.charAt(0).toUpperCase()}{lastName?.charAt(0).toUpperCase()}
+                      </div>
+                      <p className="text-center mt-2">Logged In</p>
+                    </div>
+                  ) : (
+                    <>
+                      <Link
+                        href="/auth/signin"
+                        className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-medium leading-7 text-gray-300 hover:bg-gray-800"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Log in
+                      </Link>
+                      <Link
+                        href="/auth/signup"
+                        className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-medium leading-7 text-gray-300 hover:bg-gray-800"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Sign up
+                      </Link>
+                    </>
+                  )}
+                  
                 </div>
               </div>
             </div>
