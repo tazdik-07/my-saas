@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Home } from "lucide-react";
 
 export default function SignUp() {
   const [firstName, setFirstName] = useState("");
@@ -88,7 +89,17 @@ export default function SignUp() {
 
   return (
     <div className="flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-gradient-to-br from-[#0B1220] via-[#0F1629] to-[#0B1220] ">
-      
+      <div className="fixed top-14 left-8 z-50">
+        <button
+          onClick={() => {
+            router.push("/");
+          }}
+          className="btn-primary px-4 py-2 rounded-md text-sm font-semibold flex items-center space-x-2 cursor-pointer"
+        >
+          <Home size={18} />
+          <span>Go to Home</span>
+        </button>
+      </div>
 
       {/* This is the div that acts as the card container */}
       <div className="mt-2 sm:mx-auto sm:w-full sm:max-w-sm bg-[#1E2741] p-8 rounded-lg shadow-xl border border-gray-700 glow">

@@ -1,21 +1,18 @@
-import prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
-import { cookies } from 'next/headers';
-
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import prisma from "@/lib/prisma";
 
 
 export async function GET(request) {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token');
+    const session = await getServerSession(authOptions);
 
-    if (!token) {
+    if (!session) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    const decoded = jwt.verify(token.value, process.env.JWT_SECRET);
-    const userId = decoded.userId;
+    const userId = session.user.id;
 
     const familyMembers = await prisma.familyMember.findMany({
       where: { userId: userId },
@@ -40,15 +37,13 @@ export async function GET(request) {
 
 export async function POST(request) {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token');
+    const session = await getServerSession(authOptions);
 
-    if (!token) {
+    if (!session) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    const decoded = jwt.verify(token.value, process.env.JWT_SECRET);
-    const userId = decoded.userId;
+    const userId = session.user.id;
 
     const { firstName, lastName, phoneNumber, dateOfBirth, bloodGroup, gender, relation } = await request.json();
 

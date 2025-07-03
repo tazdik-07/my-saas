@@ -1,51 +1,77 @@
 import prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
-import { cookies } from 'next/headers';
 
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]/route";
 
-
-export async function GET(request) {
+/* ────────────── GET /api/profile ────────────── */
+export async function GET() {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token');
+    const session = await getServerSession(authOptions);
 
-    if (!token) {
+    if (!session) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    const decoded = jwt.verify(token.value, process.env.JWT_SECRET);
-    const userId = decoded.userId;
+    const userId = session.user.id;
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { id: true, email: true, firstName: true, lastName: true, phoneNumber: true, dateOfBirth: true, bloodGroup: true, familyMembers: true },
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        phoneNumber: true,
+        dateOfBirth: true,
+        bloodGroup: true,
+        gender: true,
+        familyMembers: true,   // includes linked family‑member rows
+      },
     });
 
     if (!user) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
     }
 
-    return NextResponse.json(user, { status: 200 });
-  } catch (error) {
-    console.error('Error fetching user profile:', error);
+    return NextResponse.json(user);        // 200 OK
+  } catch (err) {
+    console.error('Error fetching user profile:', err);
     return NextResponse.json({ message: 'Something went wrong' }, { status: 500 });
   }
 }
 
+/* ────────────── PUT /api/profile ────────────── */
 export async function PUT(request) {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token');
+    const session = await getServerSession(authOptions);
 
-    if (!token) {
+    if (!session) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    const decoded = jwt.verify(token.value, process.env.JWT_SECRET);
-    const userId = decoded.userId;
+    const userId = session.user.id;
 
-    const { firstName, lastName, phoneNumber, dateOfBirth, bloodGroup, gender } = await request.json();
+    const {
+      firstName,
+      lastName,
+      phoneNumber,
+      dateOfBirth,
+      bloodGroup,
+      gender,
+    } = await request.json();
+
+    /* date validation */
+    let parsedDOB = null;
+    if (dateOfBirth) {
+      parsedDOB = new Date(dateOfBirth);          // expects YYYY‑MM‑DD
+      if (isNaN(parsedDOB.getTime())) {
+        return NextResponse.json(
+          { message: 'Invalid date format – use YYYY‑MM‑DD' },
+          { status: 400 },
+        );
+      }
+    }
 
     const updatedUser = await prisma.user.update({
       where: { id: userId },
@@ -53,16 +79,28 @@ export async function PUT(request) {
         firstName,
         lastName,
         phoneNumber,
-        dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
+        dateOfBirth: parsedDOB,
         bloodGroup,
         gender,
       },
-      select: { id: true, email: true, firstName: true, lastName: true, phoneNumber: true, dateOfBirth: true, bloodGroup: true, gender: true },
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        phoneNumber: true,
+        dateOfBirth: true,
+        bloodGroup: true,
+        gender: true,
+      },
     });
 
-    return NextResponse.json({ message: 'Profile updated successfully', user: updatedUser }, { status: 200 });
-  } catch (error) {
-    console.error('Error updating user profile:', error);
+    return NextResponse.json(
+      { message: 'Profile updated successfully', user: updatedUser },
+      { status: 200 },
+    );
+  } catch (err) {
+    console.error('Error updating user profile:', err);
     return NextResponse.json({ message: 'Something went wrong' }, { status: 500 });
   }
 }

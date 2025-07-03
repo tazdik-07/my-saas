@@ -306,17 +306,17 @@ export default function Profile() {
                   <div className="space-y-3">
                     <div className="flex space-x-4">
                       <div className="flex-1">
-                        <label htmlFor="firstName" className="block text-sm font-medium">First Name</label>
-                        <input type="text" id="firstName" name="firstName" value={capitalizeFirstLetter(user?.firstName) || ""} className="mt-1 block w-full p-2 rounded-md bg-gray-700 border-gray-600" readOnly />
+                        <label htmlFor="firstName" className="block text-sm font-medium ">First Name</label>
+                        <input type="text" id="firstName" name="firstName" value={capitalizeFirstLetter(user?.firstName) || ""} className="mt-1 block w-full p-2 rounded-md bg-gray-700 border border-gray-600" readOnly />
                       </div>
                       <div className="flex-1">
                         <label htmlFor="lastName" className="block text-sm font-medium">Last Name</label>
-                        <input type="text" id="lastName" name="lastName" value={capitalizeFirstLetter(user?.lastName) || ""} className="mt-1 block w-full p-2 rounded-md bg-gray-700 border-gray-600" readOnly />
+                        <input type="text" id="lastName" name="lastName" value={capitalizeFirstLetter(user?.lastName) || ""} className="mt-1 block w-full p-2 rounded-md bg-gray-700 border border-gray-600" readOnly />
                       </div>
                     </div>
                     <div>
                       <label htmlFor="email" className="block text-sm font-medium">Email</label>
-                      <input type="text" id="email" name="email" value={user?.email || ""} className="mt-1 block w-full p-2 rounded-md bg-gray-700 border-gray-600" readOnly />
+                      <input type="text" id="email" name="email" value={user?.email || ""} className="mt-1 block w-full p-2 rounded-md bg-gray-700 border border-gray-600" readOnly />
                     </div>
                     <div>
                       <label htmlFor="phoneNumber" className="block text-sm font-medium">Phone Number</label>
@@ -324,22 +324,22 @@ export default function Profile() {
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                           <Phone size={18} className="text-gray-400" />
                         </div>
-                        <input type="tel" id="phoneNumber" name="phoneNumber" value={user?.phoneNumber || ""} className="block w-full pl-10 pr-3 py-2 rounded-md bg-gray-700 border-gray-600" readOnly inputMode="numeric" pattern="[0-9]*" />
+                        <input type="tel" id="phoneNumber" name="phoneNumber" value={user?.phoneNumber || ""} className=" border block w-full pl-10 pr-3 py-2 rounded-md bg-gray-700 border-gray-600" readOnly inputMode="numeric" pattern="[0-9]*" />
                       </div>
                     </div>
                     <div className="flex space-x-4">
                       <div className="flex-1">
                         <label htmlFor="gender" className="block text-sm font-medium">Gender</label>
-                        <input type="text" id="gender" name="gender" value={user?.gender || ""} className="mt-1 block w-full p-2 rounded-md bg-gray-700 border-gray-600" readOnly />
+                        <input type="text" id="gender" name="gender" value={user?.gender || ""} className="border mt-1 block w-full p-2 rounded-md bg-gray-700 border-gray-600" readOnly />
                       </div>
                       <div className="flex-1">
                         <label htmlFor="bloodGroup" className="block text-sm font-medium">Blood Group</label>
-                        <input type="text" id="bloodGroup" name="bloodGroup" value={user?.bloodGroup || ""} className="mt-1 block w-full p-2 rounded-md bg-gray-700 border-gray-600" readOnly />
+                        <input type="text" id="bloodGroup" name="bloodGroup" value={user?.bloodGroup || ""} className="border mt-1 block w-full p-2 rounded-md bg-gray-700 border-gray-600" readOnly />
                       </div>
                     </div>
                     <div>
                       <label htmlFor="dateOfBirth" className="block text-sm font-medium">Date of Birth</label>
-                      <input type="text" id="dateOfBirth" name="dateOfBirth" value={user?.dateOfBirth ? format(new Date(user.dateOfBirth), "dd-MM-yyyy") : ""} className="mt-1 block w-full p-2 rounded-md bg-gray-700 border-gray-600" readOnly />
+                      <input type="text" id="dateOfBirth" name="dateOfBirth" value={user?.dateOfBirth ? format(new Date(user.dateOfBirth), "dd-MM-yyyy") : ""} className="border mt-1 block w-full p-2 rounded-md bg-gray-700 border-gray-600" readOnly />
                     </div>
                     <button
                       onClick={() => setIsEditing(true)}
@@ -420,11 +420,11 @@ export default function Profile() {
                 ) : (
                   <div className="space-y-4">
                     {familyMembers.map((member) => (
-                      <div key={member.id} className="w-full flex items-center justify-between bg-[#364153] p-4 rounded-lg shadow border border-gray-700 cursor-pointer"
+                      <div key={member.id} className="w-full flex items-center justify-between bg-[#364153] p-4 rounded-lg shadow border border-gray-600 cursor-pointer"
                         onClick={() => handleViewFamilyMember(member)}>
-                        <div className="flex flex-col">
+                        <div className="flex flex-col ">
                           <p className="text-lg font-sans">{capitalizeFirstLetter(member.firstName)} {capitalizeFirstLetter(member.lastName)}</p>
-                          <p className="text-sm text-gray-400">Relation: {member.relation}</p>
+                          <p className="text-sm text-gray-400">{member.relation}</p>
                         </div>
                         <div className="flex space-x-2">
                           <button

@@ -1,19 +1,34 @@
-import { MagnifyingGlassIcon, MapPinIcon, CheckIcon } from "@heroicons/react/24/outline"
+"use client"
 
-import { Stethoscope, CalendarCheck, ClipboardList, Siren   } from "lucide-react";
-
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { MagnifyingGlassIcon, MapPinIcon } from "@heroicons/react/24/outline"
+import { Stethoscope, CalendarCheck, ClipboardList, Siren } from "lucide-react"
 
 const benefits = [
-    { text: "Find the best doctors near you", icon: Stethoscope  },
-    { text: "Book appointments instantly", icon: CalendarCheck  },
-    { text: "Access medical records online", icon: ClipboardList  },
-    { text: "24/7 emergency support available", icon: Siren  },
+  { text: "Find the best doctors near you", icon: Stethoscope },
+  { text: "Book appointments instantly", icon: CalendarCheck },
+  { text: "Access medical records online", icon: ClipboardList },
+  { text: "24/7 emergency support available", icon: Siren },
 ]
 
 export default function Hero() {
+  const router = useRouter()
+  const [query, setQuery] = useState("")
+  const [location, setLocation] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handleSearch = (e) => {
+    e.preventDefault()
+    setIsLoading(true)
+    const params = new URLSearchParams()
+    if (query) params.set("query", query)
+    if (location) params.set("city", location)
+    router.push(`/search?${params.toString()}`)
+  }
+
   return (
-    <section className="relative pt-32 pb-20 px-6 lg:px-8 bg-gradient-to-br from-[#0B1220] via-[#0F1629] to-[#0B1220]">
-      <div className="mx-auto max-w-7xl">
+    <section className="relative pt-32 pb-20 px-6 lg:px-8 bg-gradient-to-br from-[#0B1220] via-[#0F1629] to-[#0B1220]">      <div className="mx-auto max-w-7xl">
         <div className="mx-auto max-w-7xl text-center animate-fade-in">
           <h1 className="heading text-4xl font-bold text-white shadow-sm sm:text-7xl tracking-tight">
             Book Trusted Doctors <span className="gradient-text">Near You</span>
@@ -25,13 +40,18 @@ export default function Hero() {
 
         {/* Search Bar */}
         <div className="mt-12 mx-auto max-w-4xl animate-slide-up">
-          <div className="bg-[#1e2741] backdrop-blur-sm rounded-2xl p-6 border border-gray-700 glow">
+          <form
+            onSubmit={handleSearch}
+            className="bg-[#1e2741] backdrop-blur-sm rounded-2xl p-6 border border-gray-700 glow"
+          >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="relative">
                 <MagnifyingGlassIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
                   type="text"
                   placeholder="Search doctors, specialties..."
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
                   className="w-full pl-12 pr-4 py-4 bg-white/5 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#3E8BFF] focus:border-transparent"
                 />
               </div>
@@ -40,14 +60,20 @@ export default function Hero() {
                 <input
                   type="text"
                   placeholder="Location"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
                   className="w-full pl-12 pr-4 py-4 bg-white/5 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#3E8BFF] focus:border-transparent"
                 />
               </div>
             </div>
-            <button className="w-full mt-4 btn-primary py-4 px-8 rounded-xl text-white font-semibold text-lg">
-              Search Doctors
+            <button
+              type="submit"
+              className="w-full mt-4 btn-primary py-4 px-8 rounded-xl text-white font-semibold text-lg"
+              disabled={isLoading}
+            >
+              {isLoading ? "Searching..." : "Search Doctors"}
             </button>
-          </div>
+          </form>
         </div>
 
         {/* Benefits List */}
@@ -77,6 +103,14 @@ export default function Hero() {
           style={{ animationDelay: "1s" }}
         ></div>
       </div>
+      {isLoading && (
+        <div className="fixed inset-0 flex justify-center items-center bg-blur z-50">
+          <div className="flex flex-col items-center">
+            <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"></div>
+            <div className="text-white text-xl font-semibold">Searching...</div>
+          </div>
+        </div>
+      )}
     </section>
   )
 }

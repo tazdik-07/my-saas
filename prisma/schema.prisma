@@ -45,17 +45,29 @@ model FamilyMember {
 }
 
 model Doctor {
-  id          String    @id @default(uuid())
-  name        String
-  specialty   String
-  description String?
-  email       String    @unique
-  phone       String?
-  address     String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  bookings    Booking[] @relation("DoctorBookings")
+  id                String   @id @default(uuid())
+  firstName         String
+  lastName          String
+  email             String   @unique
+  phoneNumber       String?
+  dateOfBirth       DateTime? @db.Date
+  gender            String?
+  bloodGroup        String?
+  specialty         String
+  registrationNumber String
+  yearsOfExperience Int
+  clinicName        String
+  city              String
+  clinicAddress     String
+  consultationFee   Int @default(500)
+  photoUrl          String?
+  password          String
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  bookings          Booking[] @relation("DoctorBookings")
 }
+
+
 
 model Booking {
   id        String   @id @default(uuid())

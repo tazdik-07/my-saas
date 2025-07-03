@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Home } from "lucide-react";
 
-export default function SignIn() {
+
+export default function DoctorSignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -16,27 +16,32 @@ export default function SignIn() {
   const [isSuccess, setIsSuccess] = useState(false);
 
   const router = useRouter();
-  const { update } = useSession();
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     setIsLoading(true);
     try {
-      const result = await signIn("credentials", {
-        redirect: false,
-        email,
-        password,
+      const response = await fetch("/api/doctors/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
       });
 
-      if (result.error) {
-        setPopupMessage(result.error || "Login failed.");
+      const data = await response.json();
+
+      if (response.ok) {
+        setIsLoading(false);
+        setIsRedirecting(true);
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 2000);
+      } else {
+        setPopupMessage(data.message || "Login failed.");
         setIsSuccess(false);
         setShowPopup(true);
         setIsLoading(false);
-      } else {
-        setIsLoading(false);
-        await update();
-        router.push("/");
       }
     } catch (error) {
       console.error("Login Error:", error);
@@ -49,11 +54,11 @@ export default function SignIn() {
 
   return (
     <div className="flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-gradient-to-br from-[#0B1220] via-[#0F1629] to-[#0B1220] ">
-      <div className="fixed top-14 left-8 z-50">
+      <div className="absolute top-14 left-8">
         <button
           onClick={() => {
-            router.push("/");
-          }}
+                router.push("/");
+              }}
           className="btn-primary px-4 py-2 rounded-md text-sm font-semibold flex items-center space-x-2 cursor-pointer"
         >
           <Home size={18} />
@@ -63,13 +68,10 @@ export default function SignIn() {
 
       {/* This is the div that acts as the card container */}
       <div className="mt-2 sm:mx-auto sm:w-full sm:max-w-sm bg-[#1E2741] p-8 rounded-lg shadow-xl border border-gray-700 glow">
-        
         <div>
-          
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="mb-4 text-center text-2xl heading leading-9 tracking-tight text-white">
-            Welcome Back!
-          </h2>
+            Welcome Back Doctor!          </h2>
         </div>
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
@@ -131,19 +133,10 @@ export default function SignIn() {
           <p className="mt-5 text-center text-sm text-gray-400">
             New User?{" "}
             <Link
-              href="/auth/signup"
+              href="/doctors/signup"
               className="font-semibold leading-6 gradient-text"
             >
-              Sign Up
-            </Link>
-          </p>
-          <p className="mt-2 text-center text-sm text-gray-400">
-            Are you a Doctor?{" "}
-            <Link
-              href="/auth/doctor-signin"
-              className="font-semibold leading-6 gradient-text"
-            >
-              Doctor Login
+              Sign Up as Doctor
             </Link>
           </p>
         </div>

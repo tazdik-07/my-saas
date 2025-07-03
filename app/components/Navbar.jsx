@@ -3,11 +3,12 @@ import { useState } from "react"
 import Link from "next/link"
 import { Bars3Icon, XMarkIcon, HeartIcon } from "@heroicons/react/24/outline"
 import { useRouter } from "next/navigation"
+import { signOut } from "next-auth/react"
 
 const navigation = [
   { name: "Home", href: "/" },
   { name: "Services", href: "/#features" },
-  { name: "For Doctors", href: "/#doctors" },
+  { name: "For Doctors", href: "/doctors/signup" },
   { name: "About", href: "/#about" },
   { name: "Contact", href: "/#contact" },
 ]
@@ -15,12 +16,13 @@ const navigation = [
 export default function Navbar({ isLoggedIn, firstName, lastName }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [profileMenuOpen, setProfileMenuOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const router = useRouter()
 
   const handleLogout = async () => {
-    await fetch("/api/auth/logout", { method: "POST" })
-    window.location.href = "/";
+    setLoading(true);
+    await signOut({ callbackUrl: "/" });
   }
 
   return (
@@ -175,6 +177,15 @@ export default function Navbar({ isLoggedIn, firstName, lastName }) {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {loading && (
+        <div className="fixed inset-0 flex justify-center items-center bg-blur z-50">
+          <div className="flex flex-col items-center">
+            <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"></div>
+            <div className="text-white text-xl font-semibold">Logging out...</div>
           </div>
         </div>
       )}

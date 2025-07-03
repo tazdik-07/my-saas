@@ -3,85 +3,106 @@ import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 import { cookies } from 'next/headers';
 
+/* ───────────────────────────── PUT /api/profile/family-members/[id] ───────────────────────────── */
 export async function PUT(request, { params }) {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token');
-
-    if (!token) {
+    /* ---------- auth ---------- */
+    const tokenCookie = (await cookies()).get('token');
+    if (!tokenCookie) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
+    const { userId } = jwt.verify(tokenCookie.value, process.env.JWT_SECRET);
 
-    const decoded = jwt.verify(token.value, process.env.JWT_SECRET);
-    const userId = decoded.userId;
-    const { id } = params;
+    /* ---------- params ---------- */
+    const { id } = params;                       // ✅ await params
+    if (!id) {
+      return NextResponse.json({ message: 'Family‑member ID is required' }, { status: 400 });
+    }
 
-    const { firstName, lastName, phoneNumber, dateOfBirth, bloodGroup, gender, relation } = await request.json();
+    /* ---------- body ---------- */
+    const {
+      firstName,
+      lastName,
+      phoneNumber,
+      dateOfBirth,
+      bloodGroup,
+      gender,
+      relation,
+    } = await request.json();
 
     if (!firstName || !lastName) {
-      return NextResponse.json({ message: 'First name and last name are required' }, { status: 400 });
+      return NextResponse.json({ message: 'First & last name are required' }, { status: 400 });
     }
 
-    // Ensure the family member belongs to the current user before updating
-    const familyMember = await prisma.familyMember.findUnique({
-      where: { id },
-    });
-
-    if (!familyMember || familyMember.userId !== userId) {
-      return NextResponse.json({ message: 'Unauthorized or family member not found' }, { status: 403 });
+    /* ---------- ownership check ---------- */
+    const fm = await prisma.familyMember.findUnique({ where: { id } });
+    if (!fm || fm.userId !== userId) {
+      return NextResponse.json({ message: 'Unauthorized or not found' }, { status: 403 });
     }
 
-    const updatedFamilyMember = await prisma.familyMember.update({
+    /* ---------- validate dateOfBirth ---------- */
+    let parsedDOB = null;
+    if (dateOfBirth) {
+      parsedDOB = new Date(dateOfBirth);               // expects “YYYY‑MM‑DD”
+      if (isNaN(parsedDOB.getTime())) {
+        return NextResponse.json(
+          { message: 'Invalid date format – use YYYY‑MM‑DD' },
+          { status: 400 },
+        );
+      }
+    }
+
+    /* ---------- update ---------- */
+    const updated = await prisma.familyMember.update({
       where: { id },
       data: {
         firstName,
         lastName,
         phoneNumber,
-        dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
+        dateOfBirth: parsedDOB,
         bloodGroup,
         gender,
         relation,
       },
     });
 
-    return NextResponse.json({ message: 'Family member updated successfully', familyMember: updatedFamilyMember }, { status: 200 });
-  } catch (error) {
-    console.error('Error updating family member:', error);
+    return NextResponse.json(
+      { message: 'Family member updated', familyMember: updated },
+      { status: 200 },
+    );
+  } catch (err) {
+    console.error('Error updating family member:', err);
     return NextResponse.json({ message: 'Something went wrong' }, { status: 500 });
   }
 }
 
+/* ─────────────────────────── DELETE /api/profile/family-members/[id] ─────────────────────────── */
 export async function DELETE(request, { params }) {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token');
-
-    if (!token) {
+    const tokenCookie = (await cookies()).get('token');
+    if (!tokenCookie) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
+    const { userId } = jwt.verify(tokenCookie.value, process.env.JWT_SECRET);
 
-    const decoded = jwt.verify(token.value, process.env.JWT_SECRET);
-    const userId = decoded.userId;
-    const { id } = params;
-
+    const { id } = params;                      
     if (!id) {
-      return NextResponse.json({ message: 'Family member ID is required' }, { status: 400 });
+      return NextResponse.json({ message: 'Family‑member ID is required' }, { status: 400 });
     }
 
-    // Ensure the family member belongs to the current user before deleting
-    const familyMember = await prisma.familyMember.findUnique({
-      where: { id },
-    });
-
-    if (!familyMember || familyMember.userId !== userId) {
-      return NextResponse.json({ message: 'Unauthorized or family member not found' }, { status: 403 });
+    const fm = await prisma.familyMember.findUnique({ where: { id } });
+    if (!fm || fm.userId !== userId) {
+      return NextResponse.json({ message: 'Unauthorized or not found' }, { status: 403 });
     }
 
     await prisma.familyMember.delete({ where: { id } });
 
-    return NextResponse.json({ message: 'Family member deleted successfully' }, { status: 200 });
-  } catch (error) {
-    console.error('Error deleting family member:', error);
+    return NextResponse.json(
+      { message: 'Family member deleted successfully' },
+      { status: 200 },
+    );
+  } catch (err) {
+    console.error('Error deleting family member:', err);
     return NextResponse.json({ message: 'Something went wrong' }, { status: 500 });
   }
 }

@@ -1,6 +1,7 @@
 /* Then pull in Tailwind (keeps your current styles working) */
 
 @import "tailwindcss";
+@import "react-day-picker/dist/style.css";
 
 .font-sans {
   font-family: 'Poppins', sans-serif;
