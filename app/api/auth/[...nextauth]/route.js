@@ -25,7 +25,7 @@ export const authOptions = {
           return null; // Invalid password
         }
 
-        return { id: doctor.id, name: `${doctor.firstName} ${doctor.lastName}`, email: doctor.email };
+        return { id: doctor.id, name: `${doctor.firstName} ${doctor.lastName}`, email: doctor.email, role: "doctor" };
       },
     }),
   ],
@@ -38,6 +38,7 @@ export const authOptions = {
         token.id = user.id;
         token.name = user.name;
         token.email = user.email;
+        token.role = user.role; // Add role to token
       }
       return token;
     },
@@ -46,6 +47,7 @@ export const authOptions = {
         session.user.id = token.id;
         session.user.name = token.name;
         session.user.email = token.email;
+        session.user.role = token.role; // Add role to session
       }
       return session;
     },

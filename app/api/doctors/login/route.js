@@ -23,7 +23,9 @@ export async function POST(request) {
       return NextResponse.json({ message: 'Invalid credentials' }, { status: 401 });
     }
 
-    return NextResponse.json({ message: 'Login successful' }, { status: 200 });
+    // Exclude password from the returned doctor object
+    const { password: doctorPassword, ...doctorWithoutPassword } = doctor;
+    return NextResponse.json({ message: 'Login successful', doctor: doctorWithoutPassword }, { status: 200 });
   } catch (error) {
     console.error('Error during doctor login:', error);
     return NextResponse.json({ message: 'Something went wrong' }, { status: 500 });

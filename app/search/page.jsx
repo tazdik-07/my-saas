@@ -22,6 +22,7 @@ import {
   Search,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import Navbar from "../components/Navbar";
 
 /* ─────────────────────────────── Doctor card ────────────────────────────── */
 function DoctorCard({ doctor }) {
@@ -117,6 +118,7 @@ export default function DoctorSearchPage() {
 
   return (
     <div className="relative bg-gradient-to-br from-[#0B1220] via-[#0F1629] to-[#0B1220] min-h-screen">
+      <Navbar />
       <div className="container mx-auto px-4 pb-20 pt-24">
       {/* ───────── Hero search bar ───────── */}
       <div className="w-full animate-slide-up mb-8">

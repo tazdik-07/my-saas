@@ -6,11 +6,13 @@ import Doctors from "./components/Doctors"
 import Testimonials from "./components/Testimonials"
 import CTA from "./components/CTA"
 import Footer from "./components/Footer"
+import Navbar from "./components/Navbar"
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-[#0B1220]">
       
+      <Navbar />
       <Hero />
       <Stats />
       <Features />
