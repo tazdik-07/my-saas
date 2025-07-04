@@ -11,21 +11,21 @@ export const authOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         
-        const user = await prisma.user.findUnique({ where: { email: credentials.email } });
+        const doctor = await prisma.doctor.findUnique({ where: { email: credentials.email } });
 
-        if (!user) {
-          return null; // User not found
+        if (!doctor) {
+          return null; // Doctor not found
         }
 
-        const isValidPassword = await bcrypt.compare(credentials.password, user.password);
+        const isValidPassword = await bcrypt.compare(credentials.password, doctor.password);
 
         if (!isValidPassword) {
           return null; // Invalid password
         }
 
-        return { id: user.id, name: `${user.firstName} ${user.lastName}`, email: user.email };
+        return { id: doctor.id, name: `${doctor.firstName} ${doctor.lastName}`, email: doctor.email };
       },
     }),
   ],
@@ -37,6 +37,7 @@ export const authOptions = {
       if (user) {
         token.id = user.id;
         token.name = user.name;
+        token.email = user.email;
       }
       return token;
     },
@@ -44,6 +45,7 @@ export const authOptions = {
       if (token) {
         session.user.id = token.id;
         session.user.name = token.name;
+        session.user.email = token.email;
       }
       return session;
     },

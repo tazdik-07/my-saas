@@ -2,7 +2,7 @@
 import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import NextTopLoader from "nextjs-toploader";
-import HeaderWrapper from "./components/HeaderWrapper";
+
 import SessionProviderWrapper from "./components/SessionProviderWrapper"; // <‑‑ client wrapper
 
 const inter = Inter({
@@ -33,7 +33,7 @@ export default function RootLayout({ children }) {
         {/* All client components (Header, pages) now live inside the SessionProvider */}
         <SessionProviderWrapper>
           <NextTopLoader color="#3e8bff" showSpinner={false} />
-          <HeaderWrapper />
+          
           {children}
         </SessionProviderWrapper>
       </body>

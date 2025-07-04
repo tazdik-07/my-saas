@@ -1,31 +1,30 @@
-
-import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import { NextResponse } from 'next/server';
+import prisma from '@/lib/prisma';
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export async function GET(request, { params }) {
   try {
+    const session = await getServerSession(authOptions);
+
+    if (!session || session.user.id !== params.id) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
+    const doctorId = params.id;
+
     const doctor = await prisma.doctor.findUnique({
-      where: { id: params.id },
+      where: { id: doctorId },
     });
 
     if (!doctor) {
-      return NextResponse.json({ error: "Doctor not found" }, { status: 404 });
+      return NextResponse.json({ message: 'Doctor not found' }, { status: 404 });
     }
 
-    // For now, we'll return dummy availability data.
-    // In a real application, this would be fetched from the database.
-    const availability = {
-      "2025-07-15": ["10:00 AM", "11:00 AM", "02:00 PM"],
-      "2025-07-16": ["09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM"],
-      "2025-07-17": ["10:00 AM", "02:00 PM", "03:00 PM"],
-    };
-
-    return NextResponse.json({ doctor, availability });
+    return NextResponse.json(doctor, { status: 200 });
   } catch (error) {
-    console.error("Error fetching doctor:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    console.error('Error fetching doctor profile:', error);
+    console.log('Request params:', params);
+    return NextResponse.json({ message: 'Something went wrong' }, { status: 500 });
   }
 }

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Home } from "lucide-react";
+import { signIn } from "next-auth/react";
 
 
 export default function DoctorSignIn() {
@@ -21,27 +22,21 @@ export default function DoctorSignIn() {
 
     setIsLoading(true);
     try {
-      const response = await fetch("/api/doctors/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
+      const result = await signIn("credentials", {
+        redirect: false, // Do not redirect, we will handle it manually
+        email,
+        password,
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        setIsLoading(false);
-        setIsRedirecting(true);
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 2000);
-      } else {
-        setPopupMessage(data.message || "Login failed.");
+      if (result.error) {
+        setPopupMessage(result.error || "Login failed.");
         setIsSuccess(false);
         setShowPopup(true);
         setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        setIsRedirecting(true);
+        router.push("/doctors/dashboard");
       }
     } catch (error) {
       console.error("Login Error:", error);
