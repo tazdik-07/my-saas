@@ -4,7 +4,9 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
+import { format } from "date-fns";
 import { LoaderCircle, Stethoscope, Building2, Award, MapPin, IndianRupee } from "lucide-react";
+import Navbar from "@/app/components/Navbar";
 
 export default function BookingPage() {
   const { id: doctorId } = useParams();
@@ -76,7 +78,7 @@ export default function BookingPage() {
   };
 
   const availableTimes = selectedDate
-    ? availability[selectedDate.toISOString().split("T")[0]] || []
+    ? availability[format(selectedDate, "EEEE")] || []
     : [];
 
   if (loading) {
@@ -93,7 +95,8 @@ export default function BookingPage() {
 
   return (
     <div className="relative bg-gradient-to-br from-[#0B1220] via-[#0F1629] to-[#0B1220] min-h-screen">
-      <div className="container mx-auto px-4 py-20">
+      <Navbar />
+      <div className="container mx-auto px-4 pt-16 pb-10">
         <h1 className="text-3xl font-bold mb-8 mt-5 ml-5">Book Appointment with <span className="gradient-text">{fullName}</span></h1>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 ">
           <div className="bg-[#1E2741] border border-gray-700 rounded-lg shadow-xl p-6 ml-5">
