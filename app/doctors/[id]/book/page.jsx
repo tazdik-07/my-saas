@@ -28,7 +28,7 @@ export default function BookingPage() {
         }
         const data = await res.json();
         setDoctor(data.doctor);
-        setAvailability(data.availability);
+        setAvailability(data.availability || {});
       } catch (error) {
         console.error(error);
       } finally {

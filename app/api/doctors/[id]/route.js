@@ -15,13 +15,32 @@ export async function GET(request, { params }) {
 
     const doctor = await prisma.doctor.findUnique({
       where: { id: doctorId },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        phoneNumber: true,
+        dateOfBirth: true,
+        gender: true,
+        bloodGroup: true,
+        specialty: true,
+        registrationNumber: true,
+        yearsOfExperience: true,
+        clinicName: true,
+        city: true,
+        clinicAddress: true,
+        consultationFee: true,
+        photoUrl: true,
+        availability: true, // Include availability
+      },
     });
 
     if (!doctor) {
       return NextResponse.json({ message: 'Doctor not found' }, { status: 404 });
     }
 
-    return NextResponse.json(doctor, { status: 200 });
+    return NextResponse.json({ doctor }, { status: 200 });
   } catch (error) {
     console.error('Error fetching doctor profile:', error);
     console.log('Request params:', params);

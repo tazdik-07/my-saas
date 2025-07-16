@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 import {
   Card,
   CardContent,
@@ -12,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { PlusCircle, MinusCircle } from "lucide-react";
+import { PlusCircle, MinusCircle, LoaderCircle } from "lucide-react";
 
 const weekdays = [
   "Monday",
@@ -25,49 +26,98 @@ const weekdays = [
 ];
 
 export default function AvailabilityManager() {
-  const [availability, setAvailability] = useState({
-    Monday: [],
-    Tuesday: [],
-    Wednesday: [],
-    Thursday: [],
-    Friday: [],
-    Saturday: [],
-    Sunday: [],
-  });
+  const { id: doctorId } = useParams();
+  const [availability, setAvailability] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAvailability = async () => {
+      try {
+        const res = await fetch(`/api/doctors/${doctorId}`);
+        if (!res.ok) {
+          throw new Error("Failed to fetch doctor availability");
+        }
+        const data = await res.json();
+        setAvailability(data.doctor.availability || {});
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (doctorId) {
+      fetchAvailability();
+    }
+  }, [doctorId]);
 
   const handleDayToggle = (day) => {
     setAvailability((prev) => ({
       ...prev,
-      [day]: prev[day].length === 0 ? ["09:00-17:00"] : [], // Default slot or clear
+      [day]: prev[day] && prev[day].length > 0 ? [] : ["09:00-17:00"], // Default slot or clear
     }));
   };
 
   const handleSlotChange = (day, index, value) => {
     setAvailability((prev) => ({
       ...prev,
-      [day]: prev[day].map((slot, i) => (i === index ? value : slot)),
+      [day]: (prev[day] || []).map((slot, i) => (i === index ? value : slot)),
     }));
   };
 
   const handleAddSlot = (day) => {
     setAvailability((prev) => ({
       ...prev,
-      [day]: [...prev[day], ""], // Add an empty slot
+      [day]: [...(prev[day] || []), ""], // Add an empty slot
     }));
   };
 
   const handleRemoveSlot = (day, index) => {
     setAvailability((prev) => ({
       ...prev,
-      [day]: prev[day].filter((_, i) => i !== index),
+      [day]: (prev[day] || []).filter((_, i) => i !== index),
     }));
   };
 
-  const handleSave = () => {
-    console.log("Saving Availability:", availability);
-    // Here you would typically send this data to your backend API
-    alert("Availability saved! Check console for data.");
+  const handleSave = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/doctors/${doctorId}/availability`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ availability }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to save availability");
+      }
+
+      alert("Availability saved successfully!");
+    } catch (error) {
+      console.error("Error saving availability:", error);
+      alert("Failed to save availability.");
+    } finally {
+      setLoading(false);
+    }
   };
+
+  if (loading) {
+    return (
+      <Card className="bg-gray-800 text-gray-100 rounded-xl shadow-lg border border-gray-600">
+        <CardHeader>
+          <CardTitle>Availability Manager</CardTitle>
+          <CardDescription>Set your consultation hours for each day.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex justify-center items-center h-48">
+            <LoaderCircle className="animate-spin w-8 h-8" />
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="bg-gray-800 text-gray-100 rounded-xl shadow-lg border border-gray-600">
@@ -82,7 +132,7 @@ export default function AvailabilityManager() {
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id={day}
-                  checked={availability[day].length > 0}
+                  checked={(availability[day] || []).length > 0}
                   onCheckedChange={() => handleDayToggle(day)}
                   className="border-gray-600 data-[state=checked]:bg-blue-600 data-[state=checked]:text-white"
                 />
@@ -90,9 +140,9 @@ export default function AvailabilityManager() {
                   {day}
                 </Label>
               </div>
-              {availability[day].length > 0 && (
+              {(availability[day] || []).length > 0 && (
                 <div className="ml-6 space-y-2">
-                  {availability[day].map((slot, index) => (
+                  {(availability[day] || []).map((slot, index) => (
                     <div key={index} className="flex items-center space-x-2">
                       <Input
                         type="text"

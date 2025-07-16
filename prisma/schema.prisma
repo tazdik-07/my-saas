@@ -61,6 +61,7 @@ model Doctor {
   clinicAddress     String
   consultationFee   Int @default(500)
   photoUrl          String?
+  availability      Json?
   password          String
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt

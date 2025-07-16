@@ -73,6 +73,7 @@ export async function POST(request) {
         city: clinicCity,
         clinicAddress,
         password: hashed,
+        availability: {}, // Initialize with an empty JSON object
       },
       select: { id: true, email: true, firstName: true, lastName: true },
     });
