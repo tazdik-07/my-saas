@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth/next";
 import prisma from "@/lib/prisma";
 import ProfileClient from "./ProfileClient";
 
+export const dynamic = 'force-dynamic';
+
 async function getProfile(session) {
   if (!session?.user?.id) {
     return null;

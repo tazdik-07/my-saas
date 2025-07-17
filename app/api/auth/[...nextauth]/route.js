@@ -12,20 +12,27 @@ export const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        
+        // Try to find a regular user first
+        const user = await prisma.user.findUnique({ where: { email: credentials.email } });
+
+        if (user) {
+          const isValidPassword = await bcrypt.compare(credentials.password, user.password);
+          if (isValidPassword) {
+            return { id: user.id, name: `${user.firstName} ${user.lastName}`, email: user.email, role: "user" };
+          }
+        }
+
+        // If not a regular user, try to find a doctor
         const doctor = await prisma.doctor.findUnique({ where: { email: credentials.email } });
 
-        if (!doctor) {
-          return null; // Doctor not found
+        if (doctor) {
+          const isValidPassword = await bcrypt.compare(credentials.password, doctor.password);
+          if (isValidPassword) {
+            return { id: doctor.id, name: `${doctor.firstName} ${doctor.lastName}`, email: doctor.email, role: "doctor" };
+          }
         }
 
-        const isValidPassword = await bcrypt.compare(credentials.password, doctor.password);
-
-        if (!isValidPassword) {
-          return null; // Invalid password
-        }
-
-        return { id: doctor.id, name: `${doctor.firstName} ${doctor.lastName}`, email: doctor.email, role: "doctor" };
+        return null; // No user or doctor found with valid credentials
       },
     }),
   ],
@@ -44,10 +51,11 @@ export const authOptions = {
     },
     async session({ session, token }) {
       if (token) {
-        session.user.id = token.id;
-        session.user.name = token.name;
-        session.user.email = token.email;
-        session.user.role = token.role; // Add role to session
+        session.user = {
+          ...session.user,
+          id: token.id,
+          role: token.role,
+        };
       }
       return session;
     },
@@ -58,6 +66,8 @@ export const authOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
 };
+
+console.log("NEXTAUTH_SECRET in NextAuth config:", process.env.NEXTAUTH_SECRET ? "Set" : "Not Set");
 
 const handler = NextAuth(authOptions);
 

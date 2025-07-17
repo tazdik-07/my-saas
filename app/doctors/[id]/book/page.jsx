@@ -7,10 +7,15 @@ import "react-day-picker/dist/style.css";
 import { format } from "date-fns";
 import { LoaderCircle, Stethoscope, Building2, Award, MapPin, IndianRupee } from "lucide-react";
 import Navbar from "@/app/components/Navbar";
+import { useSession } from "next-auth/react";
 
 export default function BookingPage() {
   const { id: doctorId } = useParams();
   const router = useRouter();
+  const { data: session } = useSession();
+  const isLoggedIn = !!session;
+  const firstName = session?.user?.name?.split(' ')[0] || '';
+  const lastName = session?.user?.name?.split(' ')[1] || '';
   const [doctor, setDoctor] = useState(null);
   const [availability, setAvailability] = useState({});
   const [loading, setLoading] = useState(true);
@@ -95,7 +100,7 @@ export default function BookingPage() {
 
   return (
     <div className="relative bg-gradient-to-br from-[#0B1220] via-[#0F1629] to-[#0B1220] min-h-screen">
-      <Navbar />
+      <Navbar isLoggedIn={isLoggedIn} firstName={firstName} lastName={lastName} />
       <div className="container mx-auto px-4 pt-16 pb-10">
         <h1 className="text-3xl font-bold mb-8 mt-5 ml-5">Book Appointment with <span className="gradient-text">{fullName}</span></h1>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 ">

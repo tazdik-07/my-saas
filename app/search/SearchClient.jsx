@@ -79,7 +79,7 @@ function DoctorCard({ doctor }) {
   );
 }
 
-export default function SearchClient({ doctors, searchParams }) {
+export default function SearchClient({ doctors, searchParams, isLoggedIn, firstName, lastName }) {
     const router = useRouter();
 
     const handleSearch = (formData) => {
@@ -97,7 +97,7 @@ export default function SearchClient({ doctors, searchParams }) {
 
   return (
     <div className="relative bg-gradient-to-br from-[#0B1220] via-[#0F1629] to-[#0B1220] min-h-screen">
-      <Navbar />
+      <Navbar isLoggedIn={isLoggedIn} firstName={firstName} lastName={lastName} />
       <div className="container mx-auto px-4 pb-20 pt-24">
       <div className="w-full animate-slide-up mb-8">
         <form action={handleSearch}>

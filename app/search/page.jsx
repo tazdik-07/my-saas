@@ -1,5 +1,7 @@
 import prisma from "@/lib/prisma";
 import SearchClient from "./SearchClient";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 
 async function getDoctors(query, speciality, city) {
   const where = {};
@@ -26,5 +28,10 @@ export default async function DoctorSearchPage({ searchParams }) {
   const { query, speciality, city } = searchParams;
   const doctors = await getDoctors(query, speciality, city);
 
-  return <SearchClient doctors={doctors} searchParams={searchParams} />;
+  const session = await getServerSession(authOptions);
+  const isLoggedIn = !!session;
+  const firstName = session?.user?.name?.split(' ')[0] || '';
+  const lastName = session?.user?.name?.split(' ')[1] || '';
+
+  return <SearchClient doctors={doctors} searchParams={searchParams} isLoggedIn={isLoggedIn} firstName={firstName} lastName={lastName} />;
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { format } from "date-fns";
@@ -31,6 +32,8 @@ export default function DoctorSignUp() {
   const [dateOfBirthError, setDateOfBirthError] = useState("");
   const [phoneNumberError, setPhoneNumberError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const router = useRouter();
 
@@ -100,7 +103,7 @@ export default function DoctorSignUp() {
         setIsSuccess(true);
         setShowPopup(true);
         setTimeout(() => {
-          router.push("/auth/signin");
+          router.push("/doctors/dashboard");
         }, 2000);
       } else {
         setPopupMessage(data.message || "Registration failed.");

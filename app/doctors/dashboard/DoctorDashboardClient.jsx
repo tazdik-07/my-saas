@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
-import { Bell, Home, Menu, Plus, X } from "lucide-react";
+import { Bell, Home, Menu, Plus, X, Users, Calendar, Clock, DollarSign, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -18,8 +18,17 @@ const RecentReviews = dynamic(() => import("./components/RecentReviews"));
 
 export default function DoctorDashboardClient({ recentReviews }) {
   const { data: session, status } = useSession();
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("isSidebarCollapsed") === "true";
+    }
+    return false;
+  });
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("isSidebarCollapsed", isSidebarCollapsed.toString());
+    }
+  }, [isSidebarCollapsed]);
 
   const navItems = [
     { name: "Dashboard", icon: Home, href: "/doctors/dashboard", active: true },
@@ -53,7 +62,7 @@ export default function DoctorDashboardClient({ recentReviews }) {
                           item.active ? "bg-blue-600 text-white" : "hover:bg-gray-700 text-gray-300"
                         }`}
                       >
-                        <item.icon className="h-5 w-5 mr-3" />
+                        <item.icon className={`h-5 w-5 ${!isSidebarCollapsed ? "mr-3" : ""}`} />
                         <span>{item.name}</span>
                       </a>
                     </li>
@@ -94,9 +103,9 @@ export default function DoctorDashboardClient({ recentReviews }) {
                   href={item.href}
                   className={`flex items-center p-3 rounded-lg transition-colors duration-200 ${
                     item.active ? "bg-blue-600 text-white" : "hover:bg-gray-700 text-gray-300"
-                  }`}
+                  } ${isSidebarCollapsed ? "justify-center" : "justify-start"}`}
                 >
-                  <item.icon className="h-5 w-5 mr-3" />
+                  <item.icon className={`h-5 w-5 ${!isSidebarCollapsed ? "mr-3" : ""}`} />
                   <span className={`${isSidebarCollapsed ? "hidden" : "block"}`}>{item.name}</span>
                 </a>
               </li>
@@ -116,7 +125,7 @@ export default function DoctorDashboardClient({ recentReviews }) {
 
       {/* Main Content Area */}
       <main
-        className={`flex-1 flex flex-col p-4 md:p-8 overflow-auto ${isSidebarCollapsed ? "md:ml-20" : "md:ml-64"} transition-all duration-300`}
+        className={`flex-1 flex flex-col p-4 md:p-8 overflow-auto transition-all duration-300`}
       >
         {/* Top Header Bar */}
         <header className="flex items-center justify-between bg-gray-800 p-4 rounded-lg shadow-lg mb-8 border border-gray-600">

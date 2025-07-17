@@ -4,10 +4,12 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import { Home, Phone, Trash2, Pencil } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 export default function ProfileClient({ user: initialUser, familyMembers: initialFamilyMembers }) {
   const [user, setUser] = useState(initialUser);
   const [familyMembers, setFamilyMembers] = useState(initialFamilyMembers);
+  const [initialLoading, setInitialLoading] = useState(!initialUser); // New state for initial data fetch
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [dateOfBirthError, setDateOfBirthError] = useState("");
@@ -36,23 +38,52 @@ export default function ProfileClient({ user: initialUser, familyMembers: initia
   const [showAddFamilyMemberModal, setShowAddFamilyMemberModal] = useState(false);
   const [isViewingFamilyMember, setIsViewingFamilyMember] = useState(false);
   const router = useRouter();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
     if (initialUser) {
       setUser(initialUser);
+      setInitialLoading(false);
       setFormData({
         firstName: initialUser.firstName || "",
         lastName: initialUser.lastName || "",
         phoneNumber: initialUser.phoneNumber || "",
-        dateOfBirth: initialUser.dateOfBirth ? format(new Date(initialUser.dateOfBirth), "dd-MM-yyyy") : "",
+        dateOfBirth: initialUser.dateOfBirth ? format(new Date(initialUser.dateOfBirth), "yyyy-MM-dd") : "", // Ensure correct format for date input
         bloodGroup: initialUser.bloodGroup || "",
         gender: initialUser.gender || "",
       });
+    } else if (status === "authenticated" && session?.user?.id) {
+      // If initialUser is null but client-side session is authenticated, fetch user data
+      const fetchUserData = async () => {
+        try {
+          const res = await fetch("/api/profile");
+          if (!res.ok) {
+            throw new Error("Failed to fetch user data");
+          }
+          const data = await res.json();
+          setUser(data);
+          setFamilyMembers(data.familyMembers);
+          setFormData({
+            firstName: data.firstName || "",
+            lastName: data.lastName || "",
+            phoneNumber: data.phoneNumber || "",
+            dateOfBirth: data.dateOfBirth ? format(new Date(data.dateOfBirth), "yyyy-MM-dd") : "",
+            bloodGroup: data.bloodGroup || "",
+            gender: data.gender || "",
+          });
+        } catch (err) {
+          setError(err.message);
+        } finally {
+          setInitialLoading(false);
+        }
+      };
+      fetchUserData();
+    } else if (status === "unauthenticated") {
+      setInitialLoading(false);
+      // Optionally redirect to login if unauthenticated and no initial user
+      // router.push("/auth/signin");
     }
-    if (initialFamilyMembers) {
-      setFamilyMembers(initialFamilyMembers);
-    }
-  }, [initialUser, initialFamilyMembers]);
+  }, [initialUser, initialFamilyMembers, session, status]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -219,7 +250,7 @@ export default function ProfileClient({ user: initialUser, familyMembers: initia
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-[#0B1220] via-[#0F1629] to-[#0B1220] pt-8 pb-0 text-white">
       {/* Overlays - these should be conditionally rendered on top */}
-      {loading && (
+      {(initialLoading || loading) && (
         <div className="fixed inset-0 flex justify-center items-center bg-blur z-50">
           <div className="flex flex-col items-center">
             <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"></div>
@@ -234,15 +265,14 @@ export default function ProfileClient({ user: initialUser, familyMembers: initia
         </div>
       )}
 
-      {!user && !loading && !error && (
+      {!user && !initialLoading && !loading && !error && (
         <div className="fixed inset-0 flex justify-center items-center bg-blur z-50">
-          <div className="text-white text-xl font-semibold">No user data found.</div>
+          <div className="text-white text-xl font-semibold">No user data found. Please ensure you are logged in.</div>
         </div>
       )}
 
-      {/* Main content - always rendered, overlays will cover it */}
-      {/* Only show the actual profile content if user data is available and not in a loading/error state */}
-      {user && !loading && !error && (
+      {/* Main content - only show if user data is available and not in a loading/error state */}
+      {user && !initialLoading && !loading && !error && (
         <>
           <div className="absolute top-8 left-8">
             <button
@@ -260,7 +290,7 @@ export default function ProfileClient({ user: initialUser, familyMembers: initia
             <h1 className="text-2xl font-bold mb-2 heading">Patient Profile</h1>
             <p className="text-sm text-gray-400">Manage your personal information and family members</p>
           </div>
-          <div className="max-h-screen max-w-6xl mx-auto flex flex-wrap lg:flex-nowrap gap-8">
+          <div className="max-w-6xl mx-auto flex flex-wrap lg:flex-nowrap gap-8">
             {/* User Profile Card */}
             <div className="w-full lg:w-1/2 bg-[#1E2741] p-8 pb-0 rounded-lg shadow-xl border border-gray-700 mb-8 lg:mb-0">
               <h1 className="text-2xl font-bold mb-6 text-center heading">Your Profile</h1>
@@ -374,7 +404,7 @@ export default function ProfileClient({ user: initialUser, familyMembers: initia
             </div>
 
             {/* Family Members Card */}
-            <div className="max-h-screen lg:w-1/2 bg-[#1E2741] p-8 rounded-lg shadow-xl border border-gray-700">
+            <div className="lg:w-1/2 bg-[#1E2741] p-8 rounded-lg shadow-xl border border-gray-700">
               <h1 className="text-2xl font-bold mb-6 text-center heading">Family Members</h1>
 
               <section>

@@ -25,6 +25,8 @@ model User {
   password    String
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
+  resetToken  String?
+  resetTokenExpires DateTime?
   bookings    Booking[]   @relation("UserBookings")
   familyMembers FamilyMember[]
 }

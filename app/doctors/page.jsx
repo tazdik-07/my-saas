@@ -1,6 +1,6 @@
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth/next";
-import Doctors from "../components/Doctors";
+import DoctorAuthButtons from "./DoctorAuthButtons";
 import DoctorPortal from "./DoctorPortal";
 
 export default async function DoctorsPage() {
@@ -10,5 +10,5 @@ export default async function DoctorsPage() {
     return <DoctorPortal />;
   }
 
-  return <Doctors />;
+  return <DoctorAuthButtons />;
 }

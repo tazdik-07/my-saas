@@ -1,7 +1,7 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
-import { Users, Calendar, AlertTriangle, DollarSign, ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { Users, Calendar, AlertTriangle, IndianRupee, ArrowUpRight, ArrowDownRight } from "lucide-react";
 
 const kpiData = [
   {
@@ -30,8 +30,8 @@ const kpiData = [
   },
   {
     title: "Earnings Today",
-    value: "$1,200",
-    icon: DollarSign,
+    value: "₹1,200",
+    icon: IndianRupee,
     change: 150,
     changeType: "increase",
     bgColor: "from-purple-700 to-purple-800",
