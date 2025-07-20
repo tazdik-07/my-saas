@@ -49,7 +49,7 @@ export default function SearchNavbar({ isLoggedIn, firstName, lastName }) {
             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
           </button>
         </div>
-        <div className="hidden flex-1 justify-center lg:flex lg:justify-start lg:gap-x-12">
+        <div className="hidden flex-1 justify-center lg:flex lg:justify-center lg:gap-x-8">
           {navigation.map((item) => (
             <Link
               key={item.name}

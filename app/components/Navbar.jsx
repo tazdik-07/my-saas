@@ -40,8 +40,7 @@ export default function Navbar() {
       >
         <div className="flex lg:flex-1">
           <Link href="/" className="-m-1.5 p-1.5 flex items-center space-x-2">
-            <HeartIcon className="h-8 w-8 text-[#3E8BFF]" />
-            <span className="font-heading font-bold text-xl text-white">
+            <span className="font-heading font-bold text-xl text-[#02c39a]">
               fibula
             </span>
           </Link>
@@ -56,7 +55,7 @@ export default function Navbar() {
             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
           </button>
         </div>
-        <div className="hidden flex-1 justify-center lg:flex lg:justify-start lg:gap-x-12">
+        <div className="hidden flex-1 justify-center lg:flex lg:justify-center lg:gap-x-8">
           {navigation.map((item) => (
             <Link
               key={item.name}

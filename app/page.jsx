@@ -19,7 +19,7 @@ export default async function Home() {
     <main className="min-h-screen bg-[#0B1220]">
       <Navbar />
       <Hero />
-      <Stats />
+      {/* <Stats /> */}
       <HowItWorks />
       <BuiltForPatients />
       <Testimonials />

@@ -25,7 +25,7 @@ export default function Hero() {
   return (
     <section className="relative min-h-screen flex items-center py-20 px-6 lg:px-8 bg-gradient-to-br from-[#0B1220] via-[#0F1629] to-[#0B1220]">      <div className="mx-auto max-w-7xl">
         <div className="mx-auto max-w-7xl text-center animate-fade-in">
-          <h1 className="heading text-4xl font-bold text-white shadow-sm sm:text-7xl tracking-tight">
+          <h1 className="heading text-4xl font-bold text-white shadow-sm sm:text-7xl tracking-tight bg-clip-text">
             Book Trusted Doctors <span className="gradient-text">Near You</span>
           </h1>
           <p className="mt-6 text-lg leading-8 text-gray-300 max-w-3xl mx-auto sm:text-base">

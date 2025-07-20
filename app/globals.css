@@ -52,12 +52,12 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #3e8bff;
+  background: #02c39a;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #2563eb;
+  background: #008669;
 }
 
 /* Smooth animations */
@@ -118,7 +118,7 @@
 /* Button + card hovers */
 .btn-primary {
   background-color: #02c39a; /* Primary button color */
-  color: black;
+  color: #0c1322;
   transition: all .3s ease;
   cursor: pointer;
 }

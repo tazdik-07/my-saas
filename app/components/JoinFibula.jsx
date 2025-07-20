@@ -1,4 +1,5 @@
-import { FaCheckCircle } from 'react-icons/fa';
+
+import { Users, CalendarCheck, BarChart, IndianRupee } from 'lucide-react';
 
 export default function JoinFibula() {
   return (
@@ -23,22 +24,30 @@ export default function JoinFibula() {
           <div className="md:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-8">
             <div className="space-y-6">
               <div className="flex items-center space-x-3">
-                <FaCheckCircle className="w-6 h-6 text-cyan-400 flex-shrink-0" />
+                <div className="bg-[#13282c] p-4 rounded-2xl">
+                  <Users className="w-8 h-8 text-[#38e5d4]" />
+                </div>
                 <span className="text-lg text-white">Patient Management</span>
               </div>
               <div className="flex items-center space-x-3">
-                <FaCheckCircle className="w-6 h-6 text-cyan-400 flex-shrink-0" />
+                <div className="bg-[#13282c] p-4 rounded-2xl">
+                  <CalendarCheck className="w-8 h-8 text-[#38e5d4]" />
+                </div>
                 <span className="text-lg text-white">Smart Scheduling</span>
               </div>
             </div>
             <div className="space-y-6">
               <div className="flex items-center space-x-3">
-                <FaCheckCircle className="w-6 h-6 text-cyan-400 flex-shrink-0" />
+                <div className="bg-[#13282c] p-4 rounded-2xl">
+                  <BarChart className="w-8 h-8 text-[#38e5d4]" />
+                </div>
                 <span className="text-lg text-white">Analytics Dashboard</span>
               </div>
               <div className="flex items-center space-x-3">
-                <FaCheckCircle className="w-6 h-6 text-cyan-400 flex-shrink-0" />
-                <span className="text-lg text-white">HIPAA Compliant</span>
+                <div className="bg-[#13282c] p-4 rounded-2xl">
+                  <IndianRupee className="w-8 h-8 text-[#38e5d4]" />
+                </div>
+                <span className="text-lg text-white">Zero Commission Model</span>
               </div>
             </div>
           </div>

@@ -18,7 +18,7 @@ const poppins = Poppins({
 });
 
 export const metadata = {
-  title: "HealthCare Pro - Your Trusted Medical Partner",
+  title: "fibula - Your Trusted Medical Partner",
   description:
     "Find the best doctors, book appointments, and get quality healthcare services. Your health is our priority.",
 };
@@ -32,7 +32,7 @@ export default function RootLayout({ children }) {
       <body className="font-sans antialiased">
         {/* All client components (Header, pages) now live inside the SessionProvider */}
         <SessionProviderWrapper>
-          <NextTopLoader color="#3e8bff" showSpinner={false} />
+          <NextTopLoader color="#02c39a" showSpinner={false} />
           
           {children}
         </SessionProviderWrapper>

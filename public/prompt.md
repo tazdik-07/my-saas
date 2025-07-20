@@ -1,36 +1,59 @@
-Build the backend logic for a doctor appointment queue tracking system using Node.js, Prisma ORM, and optionally WebSockets or Socket.io for real-time updates.
+Design a modern doctor dashboard UI for a healthcare SaaS platform, optimized exclusively for dark mode. The layout should be responsive, clean, and focused on outpatient clinic workflows. It should replace the old dashboard structure.
 
-🏥 Overview:
+Sidebar Navigation (left-aligned):
+Include these menu items:
 
-Each doctor has a queue of appointments for the day.
+Overview
 
-Each appointment has a status: waiting, in_progress, done, or skipped.
+Appointments
 
-Patients can view their position in the queue and get live updates.
+Patient Queue
 
-Doctors can mark appointments as start, done, or skip.
+Earnings
 
-🧠 What to implement:
+Reviews
 
-Prisma schema models for Doctor, Patient, and AppointmentQueue.
+The sidebar should be collapsible, minimal, and highlight the active section clearly.
 
-A function to fetch today's queue for a doctor ordered by time/status.
+Overview Page (Main Dashboard):
 
-A function to start a patient consultation (set status to in_progress), and auto-update others' positions.
+Top Summary Cards:
+Display 4 key metrics:
 
-A function to mark a consultation as done or skipped.
+Today’s Appointments
 
-A query to fetch a patient’s current position in queue.
+Patients in Queue
 
-Estimated wait time calculation using average consultation duration.
+Today's Earnings
 
-Socket.io or pusher events for real-time updates to both doctor and patient clients.
+Average Wait Time
 
-💾 Prisma model example:
-Suggest Prisma schema models that can support the above functionality, with proper relations and enums.
+Live Patient Queue:
+Show real-time queue of waiting patients with their name, visit reason, wait time, and buttons like “Start”, “Skip”, or “Mark as Done”.
 
-🎯 Note:
+Appointments Section:
+Show a list or calendar view of today’s and upcoming appointments. Include patient name, time, and visit type. Add filtering by time or type.
 
-Prioritize real-time flow using events or polling.
+Earnings Section:
+Display total earnings for the current week/month. Include a simple graph to show trends and a list of recent payouts.
 
-Use mock values and test data for sample logic.
+Reviews Section:
+Show recent patient feedback with star ratings, patient names, and short comments. Include actions to reply or flag.
+
+Recent Activity Feed:
+Display a scrolling log of events like new patient registrations, appointment changes, or new reviews.
+
+Design Guidelines:
+
+Dark mode only
+
+Clear visual hierarchy and spacing
+
+Modern fonts and clean layout
+
+Responsive and easy to navigate
+
+Prioritize clarity, speed, and minimal distractions
+
+The dashboard should feel intuitive and efficient for doctors managing daily outpatient clinic tasks."
+

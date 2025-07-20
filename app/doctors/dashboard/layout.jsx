@@ -1,7 +1,7 @@
 'use client';
 
-import Sidebar from "../components/dashboard/Sidebar";
-import Header from "../components/dashboard/Header";
+import Sidebar from "../../components/dashboard/Sidebar";
+import Header from "../../components/dashboard/Header";
 import { AnimatePresence, motion } from "framer-motion";
 
 export default function DashboardLayout({ children }) {

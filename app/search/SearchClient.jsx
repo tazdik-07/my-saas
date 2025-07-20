@@ -11,7 +11,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@
 import { Slider } from '@/components/ui/slider';
 import { Checkbox } from '@/components/ui/checkbox';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Star, Heart, X, SlidersHorizontal, ArrowUp, MapPin, Search as SearchIcon, Clock } from 'lucide-react';
+import { Star, X, SlidersHorizontal, ArrowUp, MapPin, Search as SearchIcon, Clock } from 'lucide-react';
 
 
 const specialties = [
@@ -48,7 +48,7 @@ function DoctorCard({ doctor }) {
       className="bg-[#1c2434] border border-gray-700/50 rounded-2xl shadow-lg hover:border-teal-500/50 transition-all duration-300 relative"
     >
         <Button variant="ghost" size="icon" className="absolute top-4 right-4 text-gray-400 hover:text-white hover:bg-white/10 z-10">
-            <Heart className="w-5 h-5" />
+            
         </Button>
       <div className="p-6">
         <div className="flex items-start gap-5">
@@ -340,7 +340,7 @@ export default function SearchClient({ doctors, searchParams }) {
       </main>
 
       {showBackToTop && (
-        <Button onClick={scrollToTop} className="fixed bottom-8 right-8 rounded-full w-14 h-14 bg-gradient-to-r from-teal-500 to-blue-600 shadow-lg z-30">
+        <Button onClick={scrollToTop} className="fixed bottom-8 right-8 rounded-full w-14 h-14 shadow-lg z-30 btn-primary">
           <ArrowUp className="w-6 h-6" />
         </Button>
       )}
