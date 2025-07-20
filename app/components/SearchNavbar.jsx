@@ -13,7 +13,7 @@ const navigation = [
   { name: "Contact", href: "/#contact" },
 ]
 
-export default function Navbar({ isLoggedIn, firstName, lastName, role }) {
+export default function SearchNavbar({ isLoggedIn, firstName, lastName }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [profileMenuOpen, setProfileMenuOpen] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -26,7 +26,7 @@ export default function Navbar({ isLoggedIn, firstName, lastName, role }) {
   }
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50">
+    <header className="inset-x-0 top-0 z-50">
       <nav
         className="flex items-center p-5 lg:px-8 mx-auto flex-row justify-between bg-[#0B1220]/80 backdrop-blur-sm border-b border-gray-800"
         aria-label="Global"
@@ -62,33 +62,31 @@ export default function Navbar({ isLoggedIn, firstName, lastName, role }) {
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-4 text-center justify-center items-center">
           {isLoggedIn ? (
-            role !== 'doctor' ? (
-              <div className="relative">
-                <button
-                  onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-                  className="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-white text-lg font-semibold cursor-pointer"
-                >
-                  {firstName?.charAt(0).toUpperCase()}{lastName?.charAt(0).toUpperCase()}
-                </button>
-                {profileMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-[#0B1220] border border-gray-800 rounded-md shadow-lg py-1">
-                    <Link
-                      href="/profile"
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-800"
-                      onClick={() => setProfileMenuOpen(false)}
-                    >
-                      Profile
-                    </Link>
-                    <button
-                      onClick={handleLogout}
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-800"
-                    >
-                      Logout
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : null
+            <div className="relative">
+              <button
+                onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+                className="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-white text-lg font-semibold cursor-pointer"
+              >
+                {firstName?.charAt(0).toUpperCase()}{lastName?.charAt(0).toUpperCase()}
+              </button>
+              {profileMenuOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-[#0B1220] border border-gray-800 rounded-md shadow-lg py-1">
+                  <Link
+                    href="/profile"
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-800"
+                    onClick={() => setProfileMenuOpen(false)}
+                  >
+                    Profile
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-800"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
           ) : (
             <>
               <Link
@@ -151,14 +149,12 @@ export default function Navbar({ isLoggedIn, firstName, lastName, role }) {
                 </div>
                 <div className="py-6 space-y-4">
                   {isLoggedIn ? (
-                    role !== 'doctor' ? (
-                      <div className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-medium leading-7 text-gray-300">
-                        <div className="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-white text-lg font-semibold mx-auto">
-                          {firstName?.charAt(0).toUpperCase()}{lastName?.charAt(0).toUpperCase()}
-                        </div>
-                        <p className="text-center mt-2">Logged In</p>
+                    <div className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-medium leading-7 text-gray-300">
+                      <div className="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-white text-lg font-semibold mx-auto">
+                        {firstName?.charAt(0).toUpperCase()}{lastName?.charAt(0).toUpperCase()}
                       </div>
-                    ) : null
+                      <p className="text-center mt-2">Logged In</p>
+                    </div>
                   ) : (
                     <>
                       <Link

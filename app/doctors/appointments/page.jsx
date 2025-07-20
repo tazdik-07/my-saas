@@ -2,15 +2,17 @@
 
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import dynamic from "next/dynamic";
 import { Bell, Home, Menu, Plus, X, Users, Calendar, Clock, DollarSign, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import AvailabilityManager from "../dashboard/components/AvailabilityManager";
+import { Card } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { format, parseISO } from "date-fns";
+import { Loader2 } from "lucide-react";
 
-export default function DoctorAvailabilityPage() {
+export default function DoctorAppointmentsPage() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("isSidebarCollapsed") === "true";
@@ -21,17 +23,39 @@ export default function DoctorAvailabilityPage() {
 
   const { data: session, status } = useSession();
 
+  const [appointments, setAppointments] = useState([]);
+  const [loadingAppointments, setLoadingAppointments] = useState(true);
+  const [appointmentsError, setAppointmentsError] = useState(null);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       localStorage.setItem("isSidebarCollapsed", isSidebarCollapsed.toString());
     }
   }, [isSidebarCollapsed]);
 
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      try {
+        const res = await fetch("/api/doctors/appointments");
+        if (!res.ok) {
+          throw new Error("Failed to fetch appointments");
+        }
+        const data = await res.json();
+        setAppointments(data);
+      } catch (err) {
+        setAppointmentsError(err.message);
+      } finally {
+        setLoadingAppointments(false);
+      }
+    };
+    fetchAppointments();
+  }, []);
+
   const navItems = [
     { name: "Dashboard", icon: Home, href: "/doctors/dashboard", active: false },
     { name: "Profile", icon: Users, href: "/doctors/profile" },
-    { name: "Appointments", icon: Calendar, href: "/doctors/appointments" },
-    { name: "Availability", icon: Clock, href: "/doctors/availability", active: true },
+    { name: "Appointments", icon: Calendar, href: "/doctors/appointments", active: true },
+    { name: "Availability", icon: Clock, href: "/doctors/availability" },
     { name: "Earnings", icon: DollarSign, href: "/doctors/earnings" },
     { name: "Reviews", icon: MessageSquare, href: "/doctors/reviews" },
   ];
@@ -158,8 +182,47 @@ export default function DoctorAvailabilityPage() {
             </Button>
           </div>
         </header>
-        <h1 className="text-3xl font-bold heading text-gray-50 mb-8">Availability</h1>
-        <AvailabilityManager />
+        <h1 className="text-3xl font-bold text-gray-50 mb-8">Appointments</h1>
+        <Card className="p-6 bg-gray-800 rounded-lg border border-gray-700">
+          <h2 className="text-2xl heading heading text-gray-50 mb-4">All Appointments</h2>
+          {loadingAppointments ? (
+            <div className="flex justify-center items-center h-32">
+              <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+              <p className="ml-2 text-gray-400">Loading appointments...</p>
+            </div>
+          ) : appointmentsError ? (
+            <div className="text-red-500 text-center p-4">
+              Error: {appointmentsError}. Please try again.
+            </div>
+          ) : appointments.length === 0 ? (
+            <p className="text-gray-400">No appointments found.</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-gray-700 hover:bg-gray-700">
+                    <TableHead className="text-gray-300">Date</TableHead>
+                    <TableHead className="text-gray-300">Time</TableHead>
+                    <TableHead className="text-gray-300">Patient</TableHead>
+                    <TableHead className="text-gray-300">Email</TableHead>
+                    <TableHead className="text-gray-300">Phone</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {appointments.map((appt) => (
+                    <TableRow key={appt.id} className="border-gray-700 hover:bg-gray-700">
+                      <TableCell className="font-medium">{format(parseISO(appt.date), 'MMM dd, yyyy')}</TableCell>
+                      <TableCell>{appt.time}</TableCell>
+                      <TableCell>{appt.user.firstName} {appt.user.lastName}</TableCell>
+                      <TableCell>{appt.user.email}</TableCell>
+                      <TableCell>{appt.user.phoneNumber}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </Card>
       </main>
     </div>
   );

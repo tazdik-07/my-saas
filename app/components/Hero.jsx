@@ -5,12 +5,7 @@ import { useRouter } from "next/navigation"
 import { MagnifyingGlassIcon, MapPinIcon } from "@heroicons/react/24/outline"
 import { Stethoscope, CalendarCheck, ClipboardList, Siren } from "lucide-react"
 
-const benefits = [
-  { text: "Find the best doctors near you", icon: Stethoscope },
-  { text: "Book appointments instantly", icon: CalendarCheck },
-  { text: "Access medical records online", icon: ClipboardList },
-  { text: "24/7 emergency support available", icon: Siren },
-]
+
 
 export default function Hero() {
   const router = useRouter()
@@ -28,7 +23,7 @@ export default function Hero() {
   }
 
   return (
-    <section className="relative pt-32 pb-20 px-6 lg:px-8 bg-gradient-to-br from-[#0B1220] via-[#0F1629] to-[#0B1220]">      <div className="mx-auto max-w-7xl">
+    <section className="relative min-h-screen flex items-center py-20 px-6 lg:px-8 bg-gradient-to-br from-[#0B1220] via-[#0F1629] to-[#0B1220]">      <div className="mx-auto max-w-7xl">
         <div className="mx-auto max-w-7xl text-center animate-fade-in">
           <h1 className="heading text-4xl font-bold text-white shadow-sm sm:text-7xl tracking-tight">
             Book Trusted Doctors <span className="gradient-text">Near You</span>
@@ -76,23 +71,7 @@ export default function Hero() {
           </form>
         </div>
 
-        {/* Benefits List */}
-        <div className="mt-16 mx-auto max-w-3xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {benefits.map((benefit, index) => (
-              <div
-                key={index}
-                className="flex items-center space-x-3 animate-slide-up"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="flex-shrink-0">
-                  <benefit.icon className="h-6 w-6 text-[#3E8BFF]" />
-                </div>
-                <span className="text-gray-300 text-lg">{benefit.text}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+        
       </div>
 
       {/* Background decoration */}

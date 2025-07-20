@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
-import { format } from "date-fns";
+import { format, parseISO, isSameDay, isBefore } from "date-fns";
 import { LoaderCircle, Stethoscope, Building2, Award, MapPin, IndianRupee } from "lucide-react";
 import Navbar from "@/app/components/Navbar";
 import { useSession } from "next-auth/react";
@@ -17,14 +17,18 @@ export default function BookingPage() {
   const firstName = session?.user?.name?.split(' ')[0] || '';
   const lastName = session?.user?.name?.split(' ')[1] || '';
   const [doctor, setDoctor] = useState(null);
-  const [availability, setAvailability] = useState({});
+  const [doctorAvailability, setDoctorAvailability] = useState(null);
   const [loading, setLoading] = useState(true);
   const [booking, setBooking] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(null);
   const fullName = doctor ? `${doctor.firstName} ${doctor.lastName}` : "";
 
-
+  useEffect(() => {
+    if (session?.user?.role === "doctor") {
+      router.push("/doctors/dashboard");
+    }
+  }, [session, router]);
 
   useEffect(() => {
     const fetchDoctor = async () => {
@@ -35,7 +39,7 @@ export default function BookingPage() {
         }
         const data = await res.json();
         setDoctor(data.doctor);
-        setAvailability(data.availability || {});
+        setDoctorAvailability(data.doctor.availability || {});
       } catch (error) {
         console.error(error);
       } finally {
@@ -47,6 +51,48 @@ export default function BookingPage() {
       fetchDoctor();
     }
   }, [doctorId]);
+
+  const getAvailableTimeSlots = (date) => {
+    if (!doctorAvailability) return [];
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Normalize today to start of day
+
+    const selectedDayName = format(date, "EEEE");
+    const dailySlots = doctorAvailability.dailyAvailability?.[selectedDayName] || [];
+
+    // Check overall availability
+    if (!doctorAvailability.isAvailable) {
+      if (doctorAvailability.resumeAppointmentsDate) {
+        const resumeDate = parseISO(doctorAvailability.resumeAppointmentsDate);
+        if (isBefore(date, resumeDate) || isSameDay(date, resumeDate)) {
+          return []; // Doctor is on holiday until resume date
+        }
+      }
+    }
+
+    // Check specific holidays
+    const isHoliday = doctorAvailability.holidays?.some(holiday =>
+      isSameDay(date, parseISO(holiday.date))
+    );
+    if (isHoliday) {
+      return [];
+    }
+
+    // Filter out past times for today
+    const now = new Date();
+    return dailySlots.filter(slot => {
+      if (isSameDay(date, new Date())) {
+        const [hour, minute] = slot.start.split(":").map(Number);
+        const slotTime = new Date();
+        slotTime.setHours(hour, minute, 0, 0);
+        return slotTime > now;
+      }
+      return true;
+    });
+  };
+
+  const availableTimes = getAvailableTimeSlots(selectedDate);
 
   const handleDateSelect = (date) => {
     setSelectedDate(date);
@@ -64,7 +110,7 @@ export default function BookingPage() {
         body: JSON.stringify({
           doctorId,
           date: selectedDate.toISOString(),
-          time: selectedTime,
+          time: selectedTime.start,
         }),
       });
 
@@ -82,10 +128,6 @@ export default function BookingPage() {
     }
   };
 
-  const availableTimes = selectedDate
-    ? availability[format(selectedDate, "EEEE")] || []
-    : [];
-
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -97,6 +139,15 @@ export default function BookingPage() {
   if (!doctor) {
     return <div className="text-center py-20">Doctor not found.</div>;
   }
+
+  const isDoctorUnavailable = !doctorAvailability?.isAvailable && (
+    !doctorAvailability?.resumeAppointmentsDate ||
+    isBefore(selectedDate, parseISO(doctorAvailability.resumeAppointmentsDate))
+  );
+
+  const isSelectedDateHoliday = doctorAvailability?.holidays?.some(holiday =>
+    isSameDay(selectedDate, parseISO(holiday.date))
+  );
 
   return (
     <div className="relative bg-gradient-to-br from-[#0B1220] via-[#0F1629] to-[#0B1220] min-h-screen">
@@ -112,11 +163,11 @@ export default function BookingPage() {
                 className="w-16 h-16 rounded-lg object-cover mr-4"
               />
               <div>
-                <h3 className="text-xl font-semibold text-white">{fullName}</h3>
+                <h3 className="text-xl heading text-white">{fullName}</h3>
                 <p className="text-sm text-gray-400">{doctor.specialty}</p>
               </div>
             </div>
-            <h3 className="text-xl font-semibold mb-4">Doctor Details</h3>
+            <h3 className="text-xl heading mb-4">Doctor Details</h3>
             <div className="space-y-2">
               
               {doctor.clinicName && (
@@ -139,7 +190,7 @@ export default function BookingPage() {
           <div className="flex flex-col md:flex-row items-start gap-8">
             {/* calendar */}
             <div className="flex-none inline-block w-fit bg-white/5 border border-gray-600 rounded-xl text-white p-4">
-              <h3 className="text-xl font-semibold mb-4 gradient-text">Select Date</h3>
+              <h3 className="text-xl heading mb-4 gradient-text">Select Date</h3>
               <DayPicker
                 mode="single"
                 selected={selectedDate}
@@ -149,24 +200,33 @@ export default function BookingPage() {
 
             {/* time slots */}
             <div className="flex-none w-fit">
-              <h3 className="text-xl font-semibold mb-4 gradient-text">Select Time</h3>
+              <h3 className="text-xl heading heading mb-4 gradient-text">Select Time</h3>
 
-              <div className="grid grid-cols-3 gap-4 w-fit">
-                {availableTimes.length > 0 ? (
-                  availableTimes.map((time) => (
+              <div className="grid grid-cols-3 gap-4 w-xl">
+                {isDoctorUnavailable ? (
+                  <p className="text-gray-400 col-span-3">
+                    Doctor is currently unavailable.
+                    {doctorAvailability?.resumeAppointmentsDate && (
+                      ` Will resume appointments on ${format(parseISO(doctorAvailability.resumeAppointmentsDate), "PPP")}.`
+                    )}
+                  </p>
+                ) : isSelectedDateHoliday ? (
+                  <p className="text-gray-400 col-span-3">Doctor is on holiday on this date.</p>
+                ) : availableTimes.length > 0 ? (
+                  availableTimes.map((slot) => (
                     <button
-                      key={time}
-                      onClick={() => setSelectedTime(time)}
-                      className={`p-4 rounded-lg text-center ${selectedTime === time
+                      key={slot.start}
+                      onClick={() => setSelectedTime(slot)}
+                      className={`p-4 rounded-lg text-center ${selectedTime?.start === slot.start
                           ? 'bg-indigo-600 text-white'
                           : 'bg-gray-700 text-white'
                         }`}
                     >
-                      {time}
+                      {format(new Date(`1970-01-01T${slot.start}`), 'h:mm a')} - {format(new Date(`1970-01-01T${slot.end}`), 'h:mm a')}
                     </button>
                   ))
                 ) : (
-                  <p className="text-gray-400">No available slots for this date.</p>
+                  <p className="text-gray-400 col-span-3">No available slots for this date.</p>
                 )}
               </div>
             </div>

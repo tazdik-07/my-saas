@@ -11,7 +11,7 @@
 .glow {
   -webkit-box-shadow: 0px 0px 141px 6px rgba(73, 163, 252, 0.2);
   -moz-box-shadow: 0px 0px 141px 6px rgba(73, 163, 252, 0.2);
-  box-shadow: 0px 0px 141px 6px rgba(73, 163, 252, 0.2);
+  box-shadow: 0px 0px 141px 6px rgba(73, 252, 133, 0.2);
 }
 
 .bg-blur {
@@ -19,10 +19,13 @@
   background-clip: padding-box;
   backdrop-filter: blur(12px) saturate(100%) contrast(100%);
 }
-
+.font-bold{
+  font-family: var(--font-inter);
+  font-weight: 1000;
+}
 .heading {
   font-family: var(--font-inter);
-  font-weight: 900;
+  font-weight: 1000;
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
@@ -106,7 +109,7 @@
 
 /* Gradient text */
 .gradient-text {
-  background: linear-gradient(135deg, #4daafb 0%, #3e8bff 100%);
+  background: linear-gradient(90deg, #02c39a, #05668d);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -114,13 +117,14 @@
 
 /* Button + card hovers */
 .btn-primary {
-  background: linear-gradient(135deg, #143a5b 0%, #0a377a 100%);
+  background-color: #02c39a; /* Primary button color */
+  color: black;
   transition: all .3s ease;
+  cursor: pointer;
 }
-
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(62, 139, 255, .3);
+  box-shadow: 0 10px 25px rgba(62, 255, 191, 0.3);
 }
 
 .card-hover {
