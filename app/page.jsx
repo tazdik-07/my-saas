@@ -15,13 +15,9 @@ import JoinFibula from "./components/JoinFibula"
 export default async function Home() {
   const session = await getServerSession(authOptions);
   const isLoggedIn = !!session;
-  const firstName = session?.user?.name?.split(' ')[0] || '';
-  const lastName = session?.user?.name?.split(' ')[1] || '';
-  const role = session?.user?.role || '';
-
   return (
     <main className="min-h-screen bg-[#0B1220]">
-      <Navbar isLoggedIn={isLoggedIn} firstName={firstName} lastName={lastName} role={role} />
+      <Navbar />
       <Hero />
       <Stats />
       <HowItWorks />

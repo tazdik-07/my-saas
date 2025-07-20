@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 export default function HeaderWrapper() {
   const pathname = usePathname();
   const { data: session } = useSession();
+  console.log("HeaderWrapper session:", session);
   const isLoggedIn = !!session;
   const firstName = session?.user?.name?.split(" ")[0] || null;
   const lastName = session?.user?.name?.split(" ")[1] || null;
@@ -17,5 +18,7 @@ export default function HeaderWrapper() {
     return null;
   }
 
-  return <Navbar isLoggedIn={isLoggedIn} firstName={firstName} lastName={lastName} />;
+    const role = session?.user?.role || null;
+  return <Navbar isLoggedIn={isLoggedIn} firstName={firstName} lastName={lastName} role={role} />;
+
 }

@@ -51,11 +51,13 @@ export const authOptions = {
     },
     async session({ session, token }) {
       if (token) {
-        session.user = {
-          ...session.user,
-          id: token.id,
-          role: token.role,
-        };
+        session.user.id = token.id;
+        session.user.role = token.role;
+        session.user.name = token.name;
+        session.user.email = token.email;
+        session.user.role = token.role;
+        session.user.name = token.name;
+        session.user.email = token.email;
       }
       return session;
     },

@@ -13,12 +13,19 @@ const navigation = [
   { name: "Contact", href: "/#contact" },
 ]
 
-export default function Navbar({ isLoggedIn, firstName, lastName, role }) {
+import { useSession } from "next-auth/react"
+
+export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [profileMenuOpen, setProfileMenuOpen] = useState(false)
   const [loading, setLoading] = useState(false)
 
   const router = useRouter()
+  const { data: session } = useSession();
+  const isLoggedIn = !!session;
+  const firstName = session?.user?.name?.split(' ')[0] || '';
+  const lastName = session?.user?.name?.split(' ')[1] || '';
+  const role = session?.user?.role || '';
 
   const handleLogout = async () => {
     setLoading(true);
@@ -61,34 +68,32 @@ export default function Navbar({ isLoggedIn, firstName, lastName, role }) {
           ))}
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-4 text-center justify-center items-center">
-          {isLoggedIn ? (
-            role !== 'doctor' ? (
-              <div className="relative">
-                <button
-                  onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-                  className="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-white text-lg font-semibold cursor-pointer"
-                >
-                  {firstName?.charAt(0).toUpperCase()}{lastName?.charAt(0).toUpperCase()}
-                </button>
-                {profileMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-[#0B1220] border border-gray-800 rounded-md shadow-lg py-1">
-                    <Link
-                      href="/profile"
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-800"
-                      onClick={() => setProfileMenuOpen(false)}
-                    >
-                      Profile
-                    </Link>
-                    <button
-                      onClick={handleLogout}
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-800"
-                    >
-                      Logout
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : null
+          {isLoggedIn && role !== 'doctor' ? (
+            <div className="relative">
+              <button
+                onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+                className="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-white text-lg font-semibold cursor-pointer"
+              >
+                {firstName?.charAt(0).toUpperCase()}{lastName?.charAt(0).toUpperCase()}
+              </button>
+              {profileMenuOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-[#0B1220] border border-gray-800 rounded-md shadow-lg py-1">
+                  <Link
+                    href="/profile"
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-800"
+                    onClick={() => setProfileMenuOpen(false)}
+                  >
+                    Profile
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-800"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
           ) : (
             <>
               <Link
