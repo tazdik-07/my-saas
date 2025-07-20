@@ -33,7 +33,7 @@ const stats = [
 
 export default function Stats() {
   return (
-    <section className="py-20 px-6 lg:px-8 bg-[#0B1220]">
+    <section className="py-20 px-6 lg:px-8 bg-[#0b1220]">
       <div className="mx-auto max-w-7xl">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {stats.map((stat, index) => (
@@ -42,8 +42,8 @@ export default function Stats() {
               className="card-hover bg-white/5 backdrop-blur-sm rounded-2xl p-8 text-center border border-gray-800 animate-slide-up"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#3E8BFF]/20 mb-6">
-                <stat.icon className="h-8 w-8 text-[#3E8BFF]" aria-hidden="true" />
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#02c39a]/20 mb-6">
+                <stat.icon className="h-8 w-8 text-[#02c39a]" aria-hidden="true" />
               </div>
               <div className="font-heading text-4xl font-bold text-white mb-2">{stat.value}</div>
               <div className="text-xl font-semibold text-gray-200 mb-2">{stat.name}</div>

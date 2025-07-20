@@ -62,7 +62,7 @@ export default function ForgotPassword() {
         </button>
       </div>
 
-      <div className="mt-2 sm:mx-auto sm:w-full sm:max-w-sm bg-[#1E2741] p-8 rounded-lg shadow-xl border border-gray-700 glow">
+      <div className="mt-2 sm:mx-auto sm:w-full sm:max-w-sm bg-[#1c2434] p-8 rounded-lg shadow-xl border border-gray-700 glow">
         <div>
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
             <h2 className="mb-4 text-center text-2xl heading leading-9 tracking-tight text-white">
@@ -86,7 +86,7 @@ export default function ForgotPassword() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full p-2 rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full p-2 rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#02c39a] sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -94,7 +94,7 @@ export default function ForgotPassword() {
             <div>
               <button
                 type="submit"
-                className="btn-primary flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="btn-primary flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 text-[#0c1322] shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#02c39a]"
                 disabled={isLoading}
               >
                 {isLoading ? "Sending..." : "Send Reset Link"}
@@ -106,7 +106,7 @@ export default function ForgotPassword() {
             Remember your password?{" "}
             <Link
               href="/auth/signin"
-              className="font-semibold leading-6 gradient-text"
+              className="font-semibold leading-6 text-[#02c39a] hover:text-[#05668d]"
             >
               Login
             </Link>
@@ -115,7 +115,7 @@ export default function ForgotPassword() {
       </div>
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className={`p-6 rounded-lg shadow-xl text-white text-center ${isSuccess ? "bg-green-600" : "bg-red-600"}`}>
+          <div className={`p-6 rounded-lg shadow-xl text-white text-center ${isSuccess ? "bg-[#02c39a]" : "bg-red-600"}`}>
             <p className="text-lg font-semibold">{popupMessage}</p>
             <button
               onClick={() => setShowPopup(false)}

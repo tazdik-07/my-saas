@@ -1,40 +1,27 @@
 "use client";
 
-import { Card } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { FileText, FlaskConical, Mail, CheckCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { PlusCircle, CalendarPlus, UserPlus, MessageSquare } from "lucide-react";
 
-const quickTasks = [
-  { id: "prescriptions", label: "Unsigned Prescriptions", count: 3, icon: FileText },
-  { id: "lab_reviews", label: "Lab Reviews", count: 5, icon: FlaskConical },
-  { id: "messages", label: "Unread Messages", count: 2, icon: Mail },
-];
+export function QuickTasks() {
+  const tasks = [
+    { icon: CalendarPlus, label: "Add Appointment", href: "/doctors/appointments/new" },
+    { icon: UserPlus, label: "Add New Patient", href: "/doctors/patients/new" },
+    { icon: MessageSquare, label: "Send Broadcast", href: "/doctors/messages/new" },
+    { icon: PlusCircle, label: "Update Availability", href: "/doctors/availability" },
+  ];
 
-export default function QuickTasks() {
   return (
-    <Card className="p-6 rounded-xl shadow-lg bg-gray-800 text-gray-100 flex-grow border border-gray-600">
-      <h2 className="text-2xl font-semibold text-gray-50 mb-4">Quick Tasks</h2>
-      {quickTasks.length > 0 ? (
-        <div className="space-y-4">
-          {quickTasks.map((task) => (
-            <div key={task.id} className="flex items-center justify-between p-3 bg-gray-700 rounded-lg">
-              <div className="flex items-center">
-                <Checkbox id={task.id} className="mr-3 border-gray-500 data-[state=checked]:bg-blue-600 data-[state=checked]:text-white" />
-                <task.icon className="h-5 w-5 mr-2 text-indigo-400" />
-                <label htmlFor={task.id} className="text-lg font-medium text-gray-50 cursor-pointer">
-                  {task.label}
-                </label>
-              </div>
-              <span className="text-blue-400 font-semibold">{task.count}</span>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="text-center text-gray-400 py-8">
-          <CheckCircle className="h-12 w-12 mx-auto mb-4 text-gray-600" />
-          <p className="text-lg">All caught up! No quick tasks for today.</p>
-        </div>
-      )}
-    </Card>
+    <div className="bg-[#0B1220] border border-gray-800 rounded-xl p-6 shadow-xl">
+      <h3 className="text-xl font-bold text-white mb-4">Quick Tasks</h3>
+      <div className="grid grid-cols-2 gap-4">
+        {tasks.map((task, index) => (
+          <Button key={index} variant="outline" className="flex flex-col items-center justify-center h-28 border-gray-700 hover:bg-gray-700/50 hover:text-white text-center">
+            <task.icon className="w-6 h-6 mb-2 text-[#02c39a]" />
+            <span className="text-sm font-medium">{task.label}</span>
+          </Button>
+        ))}
+      </div>
+    </div>
   );
 }

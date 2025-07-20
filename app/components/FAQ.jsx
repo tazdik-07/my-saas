@@ -27,7 +27,7 @@ const faqs = [
 
 export default function FAQ() {
   return (
-    <section className="py-20 bg-gray-900 text-white">
+    <section className="py-20 bg-[#0b1220] text-white">
       <div className="container mx-auto px-6 text-center">
         <h2 className="text-5xl font-bold mb-6">Frequently Asked <span className="gradient-text">Questions</span></h2>
         <p className="text-lg text-gray-400 mb-12">Everything you need to know about Fibula</p>

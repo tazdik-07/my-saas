@@ -30,16 +30,16 @@ export default function Testimonials() {
   };
 
   return (
-    <section className="py-20 bg-gray-900 text-white">
+    <section className="py-20 bg-[#0b1220] text-white">
       <div className="container mx-auto px-6 text-center">
         <h2 className="text-5xl font-bold mb-6">Trusted by <span className="gradient-text">Patients</span></h2>
         <p className="text-lg text-gray-400 mb-12">Real experiences from real patients</p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
-            <div key={index} className="bg-gray-800 p-8 rounded-xl shadow-lg flex flex-col items-start text-left">
+            <div key={index} className="bg-[#1c2434] p-8 rounded-xl shadow-lg flex flex-col items-start text-left">
               <div className="flex items-center mb-4">
-                <div className="flex items-center justify-center w-14 h-14 rounded-full bg-[#13282c] text-[#38e5d4] text-lg font-bold flex-shrink-0 mr-4">
+                <div className="flex items-center justify-center w-14 h-14 rounded-full bg-[#0c1322] text-[#02c39a] text-lg font-bold flex-shrink-0 mr-4">
                   {getInitials(testimonial.name)}
                 </div>
                 <div>

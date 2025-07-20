@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Authentication - HealthCare Pro",
+  title: "Authentication - Fibula",
 };
 
 export default function AuthLayout({ children }) {

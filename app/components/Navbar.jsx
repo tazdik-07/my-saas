@@ -40,6 +40,7 @@ export default function Navbar() {
       >
         <div className="flex lg:flex-1">
           <Link href="/" className="-m-1.5 p-1.5 flex items-center space-x-2">
+            <HeartIcon className="h-8 w-8 text-[#02c39a]" />
             <span className="font-heading font-bold text-xl text-[#02c39a]">
               fibula
             </span>
@@ -60,7 +61,7 @@ export default function Navbar() {
             <Link
               key={item.name}
               href={item.href}
-              className="text-sm font-medium leading-6 text-gray-300 hover:text-[#3E8BFF] transition-colors duration-200"
+              className="text-sm font-medium leading-6 text-gray-300 hover:text-[#02c39a] transition-colors duration-200"
             >
               {item.name}
             </Link>
@@ -103,7 +104,7 @@ export default function Navbar() {
               </Link>
               <Link
                 href="/auth/signup"
-                className="btn-primary rounded-md px-4 py-2 text-sm font-semibold text-white shadow-sm"
+                className="btn-primary rounded-md px-4 py-2 text-sm font-semibold text-[#0c1322] shadow-sm"
               >
                 Sign Up
               </Link>
@@ -125,8 +126,8 @@ export default function Navbar() {
                 href="/"
                 className="-m-1.5 p-1.5 flex items-center space-x-2"
               >
-                <HeartIcon className="h-8 w-8 text-[#3E8BFF]" />
-                <span className="font-heading font-bold text-xl text-white">
+                <HeartIcon className="h-8 w-8 text-[#02c39a]" />
+                <span className="font-heading font-bold text-xl text-[#02c39a]">
                   HealthCare Pro
                 </span>
               </Link>
@@ -146,7 +147,7 @@ export default function Navbar() {
                     <Link
                       key={item.name}
                       href={item.href}
-                      className="-mx-3 block rounded-lg px-3 py-2 text-base font-medium leading-7 text-gray-300 hover:bg-gray-800 hover:text-[#3E8BFF]"
+                      className="-mx-3 block rounded-lg px-3 py-2 text-base font-medium leading-7 text-gray-300 hover:bg-gray-800 hover:text-[#02c39a]"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       {item.name}
@@ -174,7 +175,7 @@ export default function Navbar() {
                       </Link>
                       <Link
                         href="/auth/signup"
-                        className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-medium leading-7 text-gray-300 hover:bg-gray-800"
+                        className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-medium leading-7 btn-primary text-[#0c1322] hover:bg-gray-800"
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         Sign up

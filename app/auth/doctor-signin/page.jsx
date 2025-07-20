@@ -64,7 +64,7 @@ export default function DoctorSignIn() {
       </div>
 
       {/* This is the div that acts as the card container */}
-      <div className="mt-2 sm:mx-auto sm:w-full sm:max-w-sm bg-[#1E2741] p-8 rounded-lg shadow-xl border border-gray-700 glow">
+      <div className="mt-2 sm:mx-auto sm:w-full sm:max-w-sm bg-[#1c2434] p-8 rounded-lg shadow-xl border border-gray-700 glow">
         <div>
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="mb-4 text-center text-2xl heading leading-9 tracking-tight text-white">
@@ -87,7 +87,7 @@ export default function DoctorSignIn() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full p-2 rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full p-2 rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#02c39a] sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -101,7 +101,7 @@ export default function DoctorSignIn() {
                   Password
                 </label>
                 <div className="text-sm">
-                  <Link href="/auth/forgot-password" className="font-semibold text-indigo-400 hover:text-indigo-300">
+                  <Link href="/auth/forgot-password" className="font-semibold text-[#02c39a] hover:text-[#05668d]">
                     Forgot password?
                   </Link>
                 </div>
@@ -115,7 +115,7 @@ export default function DoctorSignIn() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full p-2 pr-10 rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full p-2 pr-10 rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#02c39a] sm:text-sm sm:leading-6"
                 />
                 <div
                   className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 cursor-pointer"
@@ -134,7 +134,7 @@ export default function DoctorSignIn() {
             <div>
               <button
                 type="submit"
-                className="btn-primary flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="btn-primary flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 text-[#0c1322] shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#02c39a]"
                 disabled={isLoading}
               >
                 {isLoading ? "Signing In..." : "Sign in"}
@@ -146,7 +146,7 @@ export default function DoctorSignIn() {
             New User?{" "}
             <Link
               href="/doctors/signup"
-              className="font-semibold leading-6 gradient-text"
+              className="font-semibold leading-6 text-[#02c39a] hover:text-[#05668d]"
             >
               Sign Up as Doctor
             </Link>
@@ -163,7 +163,7 @@ export default function DoctorSignIn() {
       )}
       {showPopup && !isSuccess && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className={`p-6 rounded-lg shadow-xl text-white text-center ${isSuccess ? "bg-green-600" : "bg-red-600"}`}>
+          <div className={`p-6 rounded-lg shadow-xl text-white text-center ${isSuccess ? "bg-[#02c39a]" : "bg-red-600"}`}>
             <p className="text-lg font-semibold">{popupMessage}</p>
             <button
               onClick={() => setShowPopup(false)}

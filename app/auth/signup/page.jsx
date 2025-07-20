@@ -105,7 +105,7 @@ export default function SignUp() {
       </div>
 
       {/* This is the div that acts as the card container */}
-      <div className="mt-2 sm:mx-auto sm:w-full sm:max-w-sm bg-[#1E2741] p-8 rounded-lg shadow-xl border border-gray-700 glow">
+      <div className="mt-2 sm:mx-auto sm:w-full sm:max-w-sm bg-[#1c2434] p-8 rounded-lg shadow-xl border border-gray-700 glow">
         <div>
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="mb-4 text-center text-2xl heading leading-9 tracking-tight text-white">

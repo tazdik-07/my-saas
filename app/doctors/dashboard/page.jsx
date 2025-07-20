@@ -1,5 +1,5 @@
-import DashboardServer from "./DashboardServer";
+import DoctorDashboardClient from "./DoctorDashboardClient";
 
 export default function DoctorDashboardPage() {
-  return <DashboardServer />;
+  return <DoctorDashboardClient />;
 }

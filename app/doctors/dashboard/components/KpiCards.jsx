@@ -1,72 +1,61 @@
 "use client";
 
-import { Card } from "@/components/ui/card";
-import { Users, Calendar, AlertTriangle, IndianRupee, ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { DollarSign, Users, Clock, CalendarCheck } from "lucide-react";
 
-const kpiData = [
-  {
-    title: "Patients Waiting",
-    value: 12,
-    icon: Users,
-    change: 5,
-    changeType: "increase",
-    bgColor: "from-blue-700 to-blue-800",
-  },
-  {
-    title: "Appointments Today",
-    value: 25,
-    icon: Calendar,
-    change: 2,
-    changeType: "increase",
-    bgColor: "from-green-700 to-green-800",
-  },
-  {
-    title: "Cancellations",
-    value: 3,
-    icon: AlertTriangle,
-    change: 1,
-    changeType: "increase",
-    bgColor: "from-red-700 to-red-800",
-  },
-  {
-    title: "Earnings Today",
-    value: "₹1,200",
-    icon: IndianRupee,
-    change: 150,
-    changeType: "increase",
-    bgColor: "from-purple-700 to-purple-800",
-  },
-];
+export function KpiCards({ data }) {
+  const kpis = [
+    {
+      id: 1,
+      name: "Today’s Appointments",
+      value: data.todayAppointments,
+      icon: CalendarCheck,
+      color: "text-[#02c39a]",
+      bgColor: "bg-[#02c39a]/20",
+    },
+    {
+      id: 2,
+      name: "Patients in Queue",
+      value: data.patientsInQueue,
+      icon: Users,
+      color: "text-orange-400",
+      bgColor: "bg-orange-500/20",
+    },
+    {
+      id: 3,
+      name: "Today's Earnings",
+      value: `₹${data.todayEarnings.toLocaleString()}`,
+      icon: DollarSign,
+      color: "text-blue-400",
+      bgColor: "bg-blue-500/20",
+    },
+    {
+      id: 4,
+      name: "Average Wait Time",
+      value: data.averageWaitTime,
+      icon: Clock,
+      color: "text-purple-400",
+      bgColor: "bg-purple-500/20",
+    },
+  ];
 
-export default function KpiCards() {
   return (
-    <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-      {kpiData.map((kpi) => (
-        <Card
-          key={kpi.title}
-          className={`p-6 rounded-xl shadow-lg bg-gradient-to-br ${kpi.bgColor} text-white border border-gray-600 hover:shadow-xl transition-all duration-300`}
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {kpis.map((kpi) => (
+        <div
+          key={kpi.id}
+          className="bg-[#0B1220] border border-gray-800 rounded-xl p-5 flex items-center space-x-4 shadow-xl"
         >
-          <div className="flex justify-between items-start mb-4">
-            <h3 className="text-lg font-medium opacity-90">{kpi.title}</h3>
-            <kpi.icon className="h-8 w-8 opacity-70" />
+          <div
+            className={`p-3 rounded-full ${kpi.bgColor} ${kpi.color}`}
+          >
+            <kpi.icon className="w-6 h-6" />
           </div>
-          <div className="flex items-end justify-between">
-            <span className="text-4xl font-bold">{kpi.value}</span>
-            <div
-              className={`flex items-center text-sm font-semibold ${
-                kpi.changeType === "increase" ? "text-green-200" : "text-red-200"
-              }`}
-            >
-              {kpi.changeType === "increase" ? (
-                <ArrowUpRight className="h-4 w-4 mr-1" />
-              ) : (
-                <ArrowDownRight className="h-4 w-4 mr-1" />
-              )}
-              {kpi.change}
-            </div>
+          <div>
+            <p className="text-sm text-gray-400">{kpi.name}</p>
+            <p className="text-2xl font-bold text-white">{kpi.value}</p>
           </div>
-        </Card>
+        </div>
       ))}
-    </section>
+    </div>
   );
 }

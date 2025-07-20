@@ -47,7 +47,7 @@ export default function Hero() {
                   placeholder="Search doctors, specialties..."
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 bg-white/5 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#3E8BFF] focus:border-transparent"
+                  className="w-full pl-12 pr-4 py-4 bg-[#0b1220] border border-gray-700 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#02c39a] focus:border-transparent"
                 />
               </div>
               <div className="relative">
@@ -57,13 +57,13 @@ export default function Hero() {
                   placeholder="Location"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 bg-white/5 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#3E8BFF] focus:border-transparent"
+                  className="w-full pl-12 pr-4 py-4 bg-[#0b1220] border border-gray-700 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#02c39a] focus:border-transparent"
                 />
               </div>
             </div>
             <button
               type="submit"
-              className="w-full mt-4 btn-primary py-4 px-8 rounded-xl text-white font-semibold text-lg"
+              className="w-full mt-4 btn-primary py-4 px-8 rounded-xl text-[#0c1322] font-semibold text-lg"
               disabled={isLoading}
             >
               {isLoading ? "Searching..." : "Search Doctors"}
@@ -76,9 +76,9 @@ export default function Hero() {
 
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#3E8BFF]/10 rounded-full blur-3xl animate-float"></div>
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#02c39a]/10 rounded-full blur-3xl animate-float"></div>
         <div
-          className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#4DAAFB]/10 rounded-full blur-3xl animate-float"
+          className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#05668d]/10 rounded-full blur-3xl animate-float"
           style={{ animationDelay: "1s" }}
         ></div>
       </div>
