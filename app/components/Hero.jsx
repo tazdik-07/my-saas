@@ -24,9 +24,9 @@ export default function Hero() {
     <section className="relative min-h-screen flex items-center py-16 px-4 sm:py-20 sm:px-6 lg:px-8 bg-gradient-to-br from-[#0B1220] via-[#0F1629] to-[#0B1220]">
       <div className="mx-auto max-w-7xl w-full">
         {/* Main content */}
-        <div className="mx-auto max-w-4xl text-center animate-fade-in">
-          <h1 className="heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-6xl font-bold text-white shadow-sm tracking-tight bg-clip-text leading-tight">
-            Book Trusted Doctors <span className="gradient-text block sm:inline mt-2 sm:mt-0">Near You</span>
+        <div className="mx-auto max-w-4xl text-center animate-fade-in flex flex-col items-center">
+          <h1 className="heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white shadow-sm tracking-tight bg-clip-text leading-tight whitespace-nowrap">
+            Book Trusted Doctors <span className="gradient-text mt-2 sm:mt-0">Near You</span>
           </h1>
           <p className="mt-4 sm:mt-6 text-base sm:text-lg md:text-xl leading-6 sm:leading-8 text-gray-300 max-w-2xl lg:max-w-3xl mx-auto px-4 sm:px-0">
             Get instant consultations with verified reviews, real-time availability, and a smooth, no-wait experience from start to finish.

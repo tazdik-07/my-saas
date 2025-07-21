@@ -15,7 +15,7 @@ module.exports = {
     extend: {
       /* ——— Fonts (use CSS vars set in globals.css) ——— */
       fontFamily: {
-        sans: ['var(--font-poppins)', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-geist-sans)', 'system-ui', 'sans-serif'],
         heading: ['var(--font-inter)', 'system-ui', 'sans-serif'],
       },
 

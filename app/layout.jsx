@@ -1,5 +1,6 @@
 // app/layout.jsx
-import { Inter, Poppins } from "next/font/google";
+import { Inter } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
 import "./globals.css";
 import NextTopLoader from "nextjs-toploader";
 
@@ -8,12 +9,6 @@ import SessionProviderWrapper from "./components/SessionProviderWrapper"; // <â€
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
-  weight: ["400", "700"],
-});
-
-const poppins = Poppins({
-  subsets: ["latin"],
-  variable: "--font-poppins",
   weight: ["400", "700"],
 });
 
@@ -27,9 +22,9 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`scroll-smooth bg-neutral-900 text-white ${inter.variable} ${poppins.variable}`}
+      className={`scroll-smooth bg-neutral-900 text-white ${inter.variable} ${GeistSans.variable}`}
     >
-      <body className="font-sans antialiased">
+      <body className={`${GeistSans.variable} antialiased`}>
         {/* All client components (Header, pages) now live inside the SessionProvider */}
         <SessionProviderWrapper>
           <NextTopLoader color="#02c39a" showSpinner={false} />

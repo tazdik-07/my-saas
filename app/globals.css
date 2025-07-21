@@ -4,7 +4,7 @@
 @import "react-day-picker/dist/style.css";
 
 .font-sans {
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--font-geist-sans), sans-serif;
 }
 
 
