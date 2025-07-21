@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "motion/react";
+import { useSession } from "next-auth/react";
 import { KpiCards } from "./components/KpiCards";
 import { PatientQueue } from "./components/PatientQueue";
 import { AppointmentsSection } from "./components/AppointmentsSection";
@@ -10,6 +11,21 @@ import { ReviewsSection } from "./components/ReviewsSection";
 import { ActivityFeed } from "./components/ActivityFeed";
 
 export default function DoctorDashboardClient() {
+  const { data: session } = useSession();
+  const [doctorName, setDoctorName] = useState("Doctor");
+
+  useEffect(() => {
+    if (session?.user?.id) {
+      fetch(`/api/doctors/${session.user.id}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.doctor) {
+            setDoctorName(`Dr. ${data.doctor.firstName}`);
+          }
+        });
+    }
+  }, [session]);
+
   // Enhanced dummy data for demonstration
   const kpiData = {
     todayAppointments: 12,
@@ -40,7 +56,7 @@ export default function DoctorDashboardClient() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-white mb-2">
-              Good {currentTime.getHours() < 12 ? 'Morning' : currentTime.getHours() < 18 ? 'Afternoon' : 'Evening'}, Dr. Sarah! 👋
+              Good {currentTime.getHours() < 12 ? 'Morning' : currentTime.getHours() < 18 ? 'Afternoon' : 'Evening'}, {doctorName}! 👋
             </h1>
             <p className="text-gray-400">
               You have {kpiData.todayAppointments} appointments today and {kpiData.patientsInQueue} patients waiting

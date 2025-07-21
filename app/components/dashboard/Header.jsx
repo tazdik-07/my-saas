@@ -49,21 +49,13 @@ export default function Header() {
 
   return (
     <>
-      <header className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-[#0B1220] via-[#0F1629] to-[#0B1220] border-b border-gray-800/50 backdrop-blur-sm">
-        {/* Left section - Greeting */}
+      <header className="relative z-30 flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-[#0B1220] via-[#0F1629] to-[#0B1220] border-b border-gray-800/50 backdrop-blur-sm">
+        {/* Left section - Title */}
         <div className="flex items-center space-x-4 flex-1 min-w-0">
           <div className="lg:ml-0 ml-16">
             <h1 className="text-lg sm:text-xl lg:text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-              Good {new Date().getHours() < 12 ? 'Morning' : new Date().getHours() < 18 ? 'Afternoon' : 'Evening'}
+              Dashboard
             </h1>
-            <p className="text-xs sm:text-sm text-gray-400 mt-1 hidden sm:block">
-              {new Date().toLocaleDateString('en-US', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-              })}
-            </p>
           </div>
         </div>
 
@@ -124,24 +116,12 @@ export default function Header() {
                   <p className="text-xs text-gray-500 mt-1 truncate">{session?.user?.email}</p>
                 </div>
                 
-                <Link href="/doctors/dashboard/profile" onClick={() => setIsProfileMenuOpen(false)}>
-                  <div className="flex items-center space-x-3 px-4 py-3 text-gray-300 hover:bg-gray-700/50 hover:text-white transition-colors duration-200">
-                    <User className="w-4 h-4" />
-                    <span className="text-sm">Profile Settings</span>
-                  </div>
-                </Link>
                 
-                <Link href="/doctors/dashboard/settings" onClick={() => setIsProfileMenuOpen(false)}>
-                  <div className="flex items-center space-x-3 px-4 py-3 text-gray-300 hover:bg-gray-700/50 hover:text-white transition-colors duration-200">
-                    <Settings className="w-4 h-4" />
-                    <span className="text-sm">Account Settings</span>
-                  </div>
-                </Link>
                 
                 <div className="border-t border-gray-700/50 mt-2">
                   <button 
                     onClick={handleLogout}
-                    className="flex items-center space-x-3 px-4 py-3 text-gray-300 hover:bg-red-600/20 hover:text-red-400 transition-colors duration-200 w-full text-left"
+                    className="flex cursor-pointer items-center space-x-3 px-4 py-3 text-gray-300 hover:bg-red-600/20 hover:text-red-400 transition-colors duration-200 w-full text-left"
                   >
                     <LogOut className="w-4 h-4" />
                     <span className="text-sm">Sign Out</span>

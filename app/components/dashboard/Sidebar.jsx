@@ -64,9 +64,9 @@ export default function Sidebar() {
         
         {/* Header */}
         <div className="p-4 sm:p-6 border-b border-gray-800/50">
-          <div className="flex items-center justify-between">
+          <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
             {!isCollapsed && (
-              <h2 className="text-xl sm:text-2xl font-bold text-white bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+              <h2 className="text-xl sm:text-2xl font-bold text-white bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text">
                 Fibula
               </h2>
             )}
@@ -125,23 +125,8 @@ export default function Sidebar() {
           </ul>
         </nav>
 
-        {/* Doctor Profile */}
-        <div className="mt-auto p-4 border-t border-gray-800/50">
-          <div className={`flex items-center ${isCollapsed ? 'justify-center' : ''}`}>
-            <div className="relative">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-400 flex items-center justify-center text-[#0A0F1C] font-semibold">
-                SJ
-              </div>
-              <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-400 rounded-full border-2 border-[#0A0F1C]" />
-            </div>
-            {!isCollapsed && (
-              <div className="ml-3 flex-1 min-w-0">
-                <p className="font-semibold text-white truncate text-sm sm:text-base">Dr. Sarah Johnson</p>
-                <p className="text-xs sm:text-sm text-gray-400 truncate">Cardiologist</p>
-              </div>
-            )}
-          </div>
-        </div>
+        
+        
       </aside>
     </>
   );

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import SearchNavbar from '@/app/components/SearchNavbar';
@@ -10,25 +10,16 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { Checkbox } from '@/components/ui/checkbox';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Star, X, SlidersHorizontal, ArrowUp, MapPin, Search as SearchIcon, Clock } from 'lucide-react';
-
+import { Star, SlidersHorizontal, ArrowUp, MapPin, Search as SearchIcon, Clock } from 'lucide-react';
 
 const specialties = [
   "Cardiology", "Dermatology", "Endocrinology", "Gastroenterology", "General Surgery", 
   "Gynecology", "Neurology", "Oncology", "Ophthalmology", "Orthopedics", "Pediatrics", 
-  "Psychiatry", "Pulmonology", "Radiology", "Urology", "Allergology", "Anesthesiology", 
-  "Audiology", "Bariatrics", "Chiropractic", "Dentistry", "Dietetics", "Emergency Medicine", 
-  "Family Medicine", "Forensic Medicine", "Geriatrics", "Hematology", "Hepatology", "Immunology", 
-  "Infectious Disease", "Internal Medicine", "Neonatology", "Nephrology", "Obstetrics", 
-  "Occupational Medicine", "Osteopathy", "Otolaryngology", "Pain Management", "Palliative Medicine", 
-  "Pathology", "Physical Medicine and Rehabilitation", "Plastic Surgery", "Podiatry", 
-  "Preventive Medicine", "Rheumatology", "Sleep Medicine", "Sports Medicine", "Toxicology", 
-  "Transplant Surgery", "Vascular Surgery"
+  "Psychiatry", "Pulmonology", "Radiology", "Urology"
 ];
 
 function DoctorCard({ doctor }) {
-  const getSpecialtyColor = (specialty) => {
+  const getSpecialtyColor = useCallback((specialty) => {
     const colors = {
         Cardiologist: 'bg-red-500/20 text-red-400 border border-red-500/30',
         Pediatrician: 'bg-blue-500/20 text-blue-400 border border-blue-500/30',
@@ -36,25 +27,15 @@ function DoctorCard({ doctor }) {
         default: 'bg-gray-500/20 text-gray-400 border border-gray-500/30',
     };
     return colors[specialty] || colors.default;
-  }
+  }, []);
 
   return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.3, ease: 'easeInOut' }}
-      className="bg-[#1c2434] border border-gray-700/50 rounded-2xl shadow-lg hover:border-teal-500/50 transition-all duration-300 relative"
-    >
-        <Button variant="ghost" size="icon" className="absolute top-4 right-4 text-gray-400 hover:text-white hover:bg-white/10 z-10">
-            
-        </Button>
+    <div className="bg-[#1c2434] border border-gray-700/50 rounded-2xl shadow-lg hover:border-teal-500/50 transition-all duration-200">
       <div className="p-6">
         <div className="flex items-start gap-5">
           <div className="relative flex-shrink-0">
             <div className="w-24 h-24 rounded-full bg-gradient-to-br from-teal-500 to-blue-600 flex items-center justify-center text-white text-4xl font-bold">
-                {doctor.firstName.charAt(0)}
+                {doctor.firstName?.charAt(0) || 'D'}
             </div>
             <span className="absolute -top-1 -right-1 block h-5 w-5 rounded-full bg-green-400 border-4 border-[#1c2434]"></span>
           </div>
@@ -94,7 +75,7 @@ function DoctorCard({ doctor }) {
             </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -121,13 +102,11 @@ function SearchSkeleton() {
     )
 }
 
-export default function SearchClient({ doctors, searchParams }) {
-  const { data: session } = useSession();
-  const isLoggedIn = !!session;
-  const firstName = session?.user?.name?.split(' ')[0] || '';
-  const lastName = session?.user?.name?.split(' ')[1] || '';
+export default function SearchClient({ searchParams }) {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
+  
+  const [doctors, setDoctors] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
 
   const [filters, setFilters] = useState({
@@ -141,10 +120,35 @@ export default function SearchClient({ doctors, searchParams }) {
     sortBy: searchParams.sortBy || 'relevance'
   });
 
+  // Debounced search function
+  const fetchDoctors = useCallback(async (searchFilters) => {
+    setIsLoading(true);
+    try {
+      const params = new URLSearchParams();
+      
+      // Only add non-empty filter values
+      if (searchFilters.query) params.set('query', searchFilters.query);
+      if (searchFilters.city) params.set('city', searchFilters.city);
+      if (searchFilters.speciality && searchFilters.speciality !== 'ALL') {
+        params.set('speciality', searchFilters.speciality);
+      }
+
+      const response = await fetch(`/api/search/doctors?${params.toString()}`);
+      const data = await response.json();
+      
+      setDoctors(data.doctors || []);
+    } catch (error) {
+      console.error('Search error:', error);
+      setDoctors([]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  // Initial load and when URL search params change
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 500);
-    return () => clearTimeout(timer);
-  }, [doctors]);
+    fetchDoctors(filters);
+  }, [searchParams.query, searchParams.city, searchParams.speciality]);
 
   useEffect(() => {
     const handleScroll = () => setShowBackToTop(window.scrollY > 300);
@@ -152,20 +156,21 @@ export default function SearchClient({ doctors, searchParams }) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleFilterChange = (key, value) => {
+  const handleFilterChange = useCallback((key, value) => {
     setFilters(prev => ({ ...prev, [key]: value }));
-  };
+  }, []);
 
-  const handleMultiCheckboxChange = (key, value) => {
-    const currentValues = filters[key];
-    const newValues = currentValues.includes(value)
-      ? currentValues.filter(v => v !== value)
-      : [...currentValues, value];
-    handleFilterChange(key, newValues);
-  };
+  const handleMultiCheckboxChange = useCallback((key, value) => {
+    setFilters(prev => {
+      const currentValues = prev[key];
+      const newValues = currentValues.includes(value)
+        ? currentValues.filter(v => v !== value)
+        : [...currentValues, value];
+      return { ...prev, [key]: newValues };
+    });
+  }, []);
 
-  const applyFilters = () => {
-    setIsLoading(true);
+  const applyFilters = useCallback(() => {
     const params = new URLSearchParams();
     Object.entries(filters).forEach(([key, value]) => {
       if (value && value.length > 0 && value !== 'ALL' && value !== 'any') {
@@ -177,16 +182,37 @@ export default function SearchClient({ doctors, searchParams }) {
       }
     });
     router.push(`/search?${params.toString()}`);
-  };
+  }, [filters, router]);
 
-  const clearFilters = () => {
-    setIsLoading(true);
+  const clearFilters = useCallback(() => {
     router.push('/search');
-  };
+  }, [router]);
 
-  const scrollToTop = () => {
+  const scrollToTop = useCallback(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  }, []);
+
+  // Memoize filtered and sorted doctors for better performance
+  const processedDoctors = useMemo(() => {
+    let result = [...doctors];
+
+    // Apply client-side filtering for better performance
+    if (filters.priceRange[0] > 0 || filters.priceRange[1] < 5000) {
+      result = result.filter(d => 
+        d.consultationFee >= filters.priceRange[0] && 
+        d.consultationFee <= filters.priceRange[1]
+      );
+    }
+
+    // Apply sorting
+    if (filters.sortBy === 'fee') {
+      result.sort((a, b) => a.consultationFee - b.consultationFee);
+    } else if (filters.sortBy === 'experience') {
+      result.sort((a, b) => b.yearsOfExperience - a.yearsOfExperience);
+    }
+
+    return result;
+  }, [doctors, filters.priceRange, filters.sortBy]);
 
   return (
     <div className="bg-[#0b1220] text-gray-300 font-sans min-h-screen">
@@ -266,7 +292,14 @@ export default function SearchClient({ doctors, searchParams }) {
                             <label className="text-gray-300 font-semibold mb-2 block text-sm">Gender</label>
                             <div className="flex gap-2">
                               {['any', 'male', 'female'].map(gender => (
-                                <Button key={gender} onClick={() => handleFilterChange('gender', gender)} variant={filters.gender === gender ? 'default' : 'outline'} className={`capitalize flex-1 h-10 text-sm ${filters.gender === gender ? 'bg-teal-600 border-teal-600 text-white' : 'border-gray-600 bg-transparent hover:bg-gray-700/50 hover:text-white'}`}>{gender}</Button>
+                                <Button 
+                                  key={gender} 
+                                  onClick={() => handleFilterChange('gender', gender)} 
+                                  variant={filters.gender === gender ? 'default' : 'outline'} 
+                                  className={`capitalize flex-1 h-10 text-sm ${filters.gender === gender ? 'bg-teal-600 border-teal-600 text-white' : 'border-gray-600 bg-transparent hover:bg-gray-700/50 hover:text-white'}`}
+                                >
+                                  {gender}
+                                </Button>
                               ))}
                             </div>
                         </div>
@@ -288,7 +321,12 @@ export default function SearchClient({ doctors, searchParams }) {
                             <div className="space-y-2">
                               {['today', 'tomorrow', 'weekends'].map(avail => (
                                 <div key={avail} className="flex items-center">
-                                  <Checkbox id={`avail-${avail}`} checked={filters.availability.includes(avail)} onCheckedChange={() => handleMultiCheckboxChange('availability', avail)} className="border-gray-500 data-[state=checked]:bg-teal-600" />
+                                  <Checkbox 
+                                    id={`avail-${avail}`} 
+                                    checked={filters.availability.includes(avail)} 
+                                    onCheckedChange={() => handleMultiCheckboxChange('availability', avail)} 
+                                    className="border-gray-500 data-[state=checked]:bg-teal-600" 
+                                  />
                                   <label htmlFor={`avail-${avail}`} className="ml-2 capitalize text-sm font-medium text-gray-300">{avail}</label>
                                 </div>
                               ))}
@@ -299,7 +337,12 @@ export default function SearchClient({ doctors, searchParams }) {
                             <div className="space-y-2">
                               {['in-clinic', 'teleconsultation'].map(mode => (
                                 <div key={mode} className="flex items-center">
-                                  <Checkbox id={`mode-${mode}`} checked={filters.mode.includes(mode)} onCheckedChange={() => handleMultiCheckboxChange('mode', mode)} className="border-gray-500 data-[state=checked]:bg-teal-600" />
+                                  <Checkbox 
+                                    id={`mode-${mode}`} 
+                                    checked={filters.mode.includes(mode)} 
+                                    onCheckedChange={() => handleMultiCheckboxChange('mode', mode)} 
+                                    className="border-gray-500 data-[state=checked]:bg-teal-600" 
+                                  />
                                   <label htmlFor={`mode-${mode}`} className="ml-2 capitalize text-sm font-medium text-gray-300">{mode}</label>
                                 </div>
                               ))}
@@ -315,25 +358,23 @@ export default function SearchClient({ doctors, searchParams }) {
           {/* Main Content */}
           <main className="flex-1 w-full">
             <div className="mb-4">
-                <h2 className="text-2xl font-bold text-white">{doctors.length} Doctors found</h2>
+                <h2 className="text-2xl font-bold text-white">{processedDoctors.length} Doctors found</h2>
                 <p className="text-gray-400">All specialities in {filters.city || 'your area'}</p>
             </div>
 
             {isLoading ? (
               <SearchSkeleton />
-            ) : doctors.length === 0 ? (
+            ) : processedDoctors.length === 0 ? (
               <div className="text-center py-20 bg-[#1c2434] rounded-2xl">
                 <h2 className="text-2xl font-bold mb-2 text-white">No doctors found</h2>
                 <p className="text-gray-400">Try adjusting your search filters.</p>
               </div>
             ) : (
-              <motion.div layout className="space-y-6">
-                <AnimatePresence>
-                  {doctors.map((d) => (
-                    <DoctorCard key={d.id} doctor={d} />
-                  ))}
-                </AnimatePresence>
-              </motion.div>
+              <div className="space-y-6">
+                {processedDoctors.map((doctor) => (
+                  <DoctorCard key={doctor.id} doctor={doctor} />
+                ))}
+              </div>
             )}
           </main>
         </div>
