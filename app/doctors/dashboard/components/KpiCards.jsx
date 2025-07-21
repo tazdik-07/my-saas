@@ -1,60 +1,90 @@
-"use client";
+'use client';
 
-import { DollarSign, Users, Clock, CalendarCheck } from "lucide-react";
+import { Calendar, Users, IndianRupee, Clock, TrendingUp, TrendingDown } from 'lucide-react';
+import { motion } from 'motion/react';
 
 export function KpiCards({ data }) {
-  const kpis = [
+  const cards = [
     {
-      id: 1,
-      name: "Today’s Appointments",
+      title: "Today's Appointments",
       value: data.todayAppointments,
-      icon: CalendarCheck,
-      color: "text-[#02c39a]",
-      bgColor: "bg-[#02c39a]/20",
+      change: "+2",
+      trend: "up",
+      icon: Calendar,
+      color: "from-blue-500 to-cyan-500",
+      bgColor: "from-blue-500/10 to-cyan-500/10"
     },
     {
-      id: 2,
-      name: "Patients in Queue",
+      title: "Patients in Queue",
       value: data.patientsInQueue,
+      change: "-1",
+      trend: "down",
       icon: Users,
-      color: "text-orange-400",
-      bgColor: "bg-orange-500/20",
+      color: "from-emerald-500 to-green-500",
+      bgColor: "from-emerald-500/10 to-green-500/10"
     },
     {
-      id: 3,
-      name: "Today's Earnings",
+      title: "Today's Earnings",
       value: `₹${data.todayEarnings.toLocaleString()}`,
-      icon: DollarSign,
-      color: "text-blue-400",
-      bgColor: "bg-blue-500/20",
+      change: "+12%",
+      trend: "up",
+      icon: IndianRupee,
+      color: "from-violet-500 to-purple-500",
+      bgColor: "from-violet-500/10 to-purple-500/10"
     },
     {
-      id: 4,
-      name: "Average Wait Time",
+      title: "Average Wait Time",
       value: data.averageWaitTime,
+      change: "-3 min",
+      trend: "down",
       icon: Clock,
-      color: "text-purple-400",
-      bgColor: "bg-purple-500/20",
-    },
+      color: "from-amber-500 to-orange-500",
+      bgColor: "from-amber-500/10 to-orange-500/10"
+    }
   ];
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {kpis.map((kpi) => (
-        <div
-          key={kpi.id}
-          className="bg-[#0B1220] border border-gray-800 rounded-xl p-5 flex items-center space-x-4 shadow-xl"
+      {cards.map((card, index) => (
+        <motion.div
+          key={card.title}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: index * 0.1 }}
+          className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${card.bgColor} border border-gray-800/50 p-6 hover:scale-[1.02] transition-transform duration-300`}
         >
-          <div
-            className={`p-3 rounded-full ${kpi.bgColor} ${kpi.color}`}
-          >
-            <kpi.icon className="w-6 h-6" />
+          {/* Background Pattern */}
+          <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent" />
+          
+          {/* Icon */}
+          <div className={`inline-flex p-3 rounded-xl bg-gradient-to-r ${card.color} mb-4`}>
+            <card.icon className="w-6 h-6 text-white" />
           </div>
-          <div>
-            <p className="text-sm text-gray-400">{kpi.name}</p>
-            <p className="text-2xl font-bold text-white">{kpi.value}</p>
+
+          {/* Content */}
+          <div className="relative">
+            <p className="text-gray-400 text-sm font-medium mb-1">{card.title}</p>
+            <p className="text-white text-2xl font-bold mb-2">{card.value}</p>
+            
+            {/* Trend */}
+            <div className="flex items-center">
+              {card.trend === 'up' ? (
+                <TrendingUp className="w-4 h-4 text-emerald-400 mr-1" />
+              ) : (
+                <TrendingDown className="w-4 h-4 text-red-400 mr-1" />
+              )}
+              <span className={`text-sm font-medium ${
+                card.trend === 'up' ? 'text-emerald-400' : 'text-red-400'
+              }`}>
+                {card.change}
+              </span>
+              <span className="text-gray-400 text-sm ml-1">vs yesterday</span>
+            </div>
           </div>
-        </div>
+
+          {/* Subtle glow effect */}
+          <div className={`absolute inset-0 bg-gradient-to-r ${card.color} opacity-0 hover:opacity-[0.02] transition-opacity duration-300`} />
+        </motion.div>
       ))}
     </div>
   );

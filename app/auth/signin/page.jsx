@@ -19,6 +19,7 @@ export default function SignIn() {
 
   const router = useRouter();
   const { update } = useSession();
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -51,143 +52,163 @@ export default function SignIn() {
   };
 
   return (
-    <div className="flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-gradient-to-br from-[#0B1220] via-[#0F1629] to-[#0B1220] ">
-      <div className="fixed top-14 left-8 z-50">
+    <div className="flex min-h-screen flex-1 flex-col justify-center px-4 py-8 sm:px-6 lg:px-8 bg-gradient-to-br from-[#0B1220] via-[#0F1629] to-[#0B1220]">
+      {/* Home Button */}
+      <div className="fixed top-4 left-4 z-50">
         <button
-          onClick={() => {
-            router.push("/");
-          }}
-          className="btn-primary px-4 py-2 rounded-md text-sm font-semibold flex items-center space-x-2 cursor-pointer"
+          onClick={() => router.push("/")}
+          className="btn-primary px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold flex items-center space-x-1 sm:space-x-2 cursor-pointer shadow-lg hover:shadow-xl transition-all duration-200"
         >
-          <Home size={18} />
-          <span>Go to Home</span>
+          <Home size={16} className="sm:w-[18px] sm:h-[18px]" />
+          <span className="hidden sm:inline">Go to Home</span>
+          <span className="sm:hidden">Home</span>
         </button>
       </div>
 
-      {/* This is the div that acts as the card container */}
-      <div className="mt-2 sm:mx-auto sm:w-full sm:max-w-sm bg-[#1c2434] p-8 rounded-lg shadow-xl border border-gray-700 glow">
+      {/* Main Card Container */}
+      <div className="mt-8 sm:mt-2 mx-auto w-full max-w-sm sm:max-w-md bg-[#1c2434]/80 backdrop-blur-lg p-6 sm:p-8 rounded-2xl shadow-2xl border border-gray-700/50 glow">
         
-        <div>
-          
-          <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <h2 className="mb-4 text-center text-2xl heading leading-9 tracking-tight text-white">
+        {/* Header */}
+        <div className="text-center mb-6 sm:mb-8">
+          <h2 className="text-2xl sm:text-3xl heading font-bold text-white mb-2">
             Welcome Back!
           </h2>
+          <p className="text-sm text-gray-400">
+            Sign in to your account to continue
+          </p>
         </div>
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            <div>
+
+        {/* Form */}
+        <form className="space-y-5 sm:space-y-6" onSubmit={handleSubmit}>
+          {/* Email Field */}
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium leading-6 text-white mb-2"
+            >
+              Email address
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="block w-full px-4 py-3 sm:py-3.5 rounded-xl border border-gray-700/50 bg-gray-800/50 backdrop-blur-sm text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#02c39a]/50 focus:border-[#02c39a]/50 transition-all duration-200 text-sm sm:text-base"
+              placeholder="Enter your email"
+            />
+          </div>
+
+          {/* Password Field */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
               <label
-                htmlFor="email"
+                htmlFor="password"
                 className="block text-sm font-medium leading-6 text-white"
               >
-                Email address
+                Password
               </label>
-              <div className="mt-2">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full p-2 rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#02c39a] sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium leading-6 text-white"
-                >
-                  Password
-                </label>
-                <div className="text-sm">
-                  <Link href="/auth/forgot-password" className="font-semibold text-[#02c39a] hover:text-[#05668d]">
-                    Forgot password?
-                  </Link>
-                </div>
-              </div>
-              <div className="mt-2">
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  autoComplete="new-password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full p-2 rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#02c39a] sm:text-sm sm:leading-6"
-                />
-                <div
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 cursor-pointer"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5 text-gray-400" />
-                  ) : (
-                    <Eye className="h-5 w-5 text-gray-400" />
-                  )}
-                </div>
-              </div>
-
-            </div>
-
-            
-            <div>
-              <button
-                type="submit"
-                className="btn-primary flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 text-[#0c1322] shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#02c39a]"
-                disabled={isLoading}
+              <Link 
+                href="/auth/forgot-password" 
+                className="text-xs sm:text-sm font-semibold text-[#02c39a] hover:text-[#05668d] transition-colors duration-200"
               >
-                {isLoading ? "Signing In..." : "Sign in"}
+                Forgot password?
+              </Link>
+            </div>
+            <div className="relative">
+              <input
+                id="password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                autoComplete="current-password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="block w-full px-4 py-3 sm:py-3.5 pr-12 rounded-xl border border-gray-700/50 bg-gray-800/50 backdrop-blur-sm text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#02c39a]/50 focus:border-[#02c39a]/50 transition-all duration-200 text-sm sm:text-base"
+                placeholder="Enter your password"
+              />
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-white transition-colors duration-200"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <EyeOff className="h-5 w-5" />
+                ) : (
+                  <Eye className="h-5 w-5" />
+                )}
               </button>
             </div>
-          </form>
+          </div>
 
-          <p className="mt-5 text-center text-sm text-gray-400">
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="btn-primary flex w-full justify-center items-center rounded-xl px-4 py-3 sm:py-3.5 text-sm sm:text-base font-semibold text-[#0c1322] shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-[#0c1322] mr-2"></div>
+                Signing In...
+              </>
+            ) : (
+              "Sign in"
+            )}
+          </button>
+        </form>
+
+        {/* Footer Links */}
+        <div className="mt-6 sm:mt-8 space-y-3 text-center">
+          <p className="text-sm text-gray-400">
             New User?{" "}
             <Link
               href="/auth/signup"
-              className="font-semibold leading-6 text-[#02c39a] hover:text-[#05668d]"
+              className="font-semibold text-[#02c39a] hover:text-[#05668d] transition-colors duration-200"
             >
               Sign Up
             </Link>
           </p>
-          <p className="mt-2 text-center text-sm text-gray-400">
+          <p className="text-sm text-gray-400">
             Are you a Doctor?{" "}
             <Link
               href="/auth/doctor-signin"
-              className="font-semibold leading-6 text-[#02c39a] hover:text-[#05668d]"
+              className="font-semibold text-[#02c39a] hover:text-[#05668d] transition-colors duration-200"
             >
               Doctor Login
             </Link>
           </p>
         </div>
-      </div >
+      </div>
+
+      {/* Loading Overlay */}
       {isRedirecting && (
-        <div className="fixed inset-0 flex justify-center items-center bg-blur z-50">
-          <div className="flex flex-col items-center">
+        <div className="fixed inset-0 flex justify-center items-center bg-black/50 backdrop-blur-sm z-50">
+          <div className="flex flex-col items-center bg-[#1c2434]/90 backdrop-blur-lg rounded-2xl p-8 border border-gray-700/50">
             <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"></div>
-            <div className="text-white text-xl font-semibold">Login successful. Redirecting...</div>
+            <div className="text-white text-lg sm:text-xl font-semibold text-center">
+              Login successful. Redirecting...
+            </div>
           </div>
         </div>
       )}
+
+      {/* Error Popup */}
       {showPopup && !isSuccess && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className={`p-6 rounded-lg shadow-xl text-white text-center ${isSuccess ? "bg-[#02c39a]" : "bg-red-600"}`}>
-            <p className="text-lg font-semibold">{popupMessage}</p>
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50 p-4">
+          <div className="bg-red-600/90 backdrop-blur-lg p-6 rounded-2xl shadow-2xl text-white text-center max-w-sm w-full border border-red-500/50">
+            <p className="text-lg font-semibold mb-4">{popupMessage}</p>
             <button
               onClick={() => setShowPopup(false)}
-              className="mt-4 px-4 py-2 bg-white text-gray-800 rounded-md hover:bg-gray-200"
+              className="px-6 py-2 bg-white/20 backdrop-blur-sm text-white rounded-lg hover:bg-white/30 transition-all duration-200 border border-white/20"
             >
               Close
             </button>
           </div>
         </div>
       )}
-    </div >
+    </div>
   );
 }

@@ -27,10 +27,10 @@ const faqs = [
 
 export default function FAQ() {
   return (
-    <section className="py-20 bg-[#0b1220] text-white">
-      <div className="container mx-auto px-6 text-center">
-        <h2 className="text-5xl font-bold mb-6">Frequently Asked <span className="gradient-text">Questions</span></h2>
-        <p className="text-lg text-gray-400 mb-12">Everything you need to know about Fibula</p>
+    <section className="py-12 sm:py-16 lg:py-20 bg-[#0b1220] text-white">
+      <div className="container mx-auto px-4 sm:px-6 text-center">
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">Frequently Asked <span className="gradient-text">Questions</span></h2>
+        <p className="text-base sm:text-lg text-gray-400 mb-8 sm:mb-12 max-w-2xl mx-auto">Everything you need to know about Fibula</p>
 
         <div className="max-w-4xl mx-auto">
           <Accordion items={faqs} />
